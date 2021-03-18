@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>776641521804-tj5guch6i2c586a31qe6nfcpe8jo12lk.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.776641521804-tj5guch6i2c586a31qe6nfcpe8jo12lk</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>776641521804-qt0ckoqenk6j6jrb5ee6oi9seqqu6j2v.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDBP6-4wMUFf4pHGtLHdPF3WQ3K1hRQiFk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>776641521804</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>za.co.toothtycoon</string>
+	<key>PROJECT_ID</key>
+	<string>toothtycoon-41347</string>
+	<key>STORAGE_BUCKET</key>
+	<string>toothtycoon-41347.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:776641521804:ios:c66ddafaa3d2976655f3a9</string>
+	<key>DATABASE_URL</key>
+	<string>https://toothtycoon-41347.firebaseio.com</string>
+</dict>
+</plist>
