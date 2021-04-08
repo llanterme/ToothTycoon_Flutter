@@ -44,8 +44,8 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
               : !_isDataAvail
                   ? _noDataWidget()
                   : Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.maybeOf(context).size.height,
+                      width: MediaQuery.maybeOf(context).size.width,
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
@@ -68,7 +68,7 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
 
   Widget _appBar() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -144,8 +144,8 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
 
   Widget _childListWidget() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.80,
-      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.maybeOf(context).size.height * 0.80,
+      width: MediaQuery.maybeOf(context).size.width,
       child: ListView.builder(
           itemCount: _childList != null && _childList.isNotEmpty
               ? _childList.length
@@ -159,7 +159,7 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
   Widget _childCell(ChildData childData) {
     return Container(
       height: 100,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: Card(
         child: ListTile(
@@ -216,8 +216,8 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
 
   Widget _noDataWidget() {
     return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.maybeOf(context).size.height,
+      width: MediaQuery.maybeOf(context).size.width,
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,8 +240,8 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
   Widget _noDataIcon() {
     return Image.asset(
       'assets/icons/ic_no_data.png',
-      height: MediaQuery.of(context).size.height * 0.40,
-      width: MediaQuery.of(context).size.width * 0.80,
+      height: MediaQuery.maybeOf(context).size.height * 0.40,
+      width: MediaQuery.maybeOf(context).size.width * 0.80,
     );
   }
 
@@ -261,7 +261,7 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
       onTap: () => _openAddChildBottomSheet(),
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.only(
           left: 50,
           right: 50,
@@ -289,8 +289,8 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
 
   Widget _loadingPage() {
     return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.maybeOf(context).size.height,
+      width: MediaQuery.maybeOf(context).size.width,
       color: AppColors.COLOR_PRIMARY,
       child: Center(
         child: CircularProgressIndicator(
@@ -316,8 +316,8 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.maybeOf(context).viewInsets.bottom),
         child: AddChildBottomSheet(
           refreshPage: _getChildList,
         ),

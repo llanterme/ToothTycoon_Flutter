@@ -41,8 +41,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.75,
-      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.maybeOf(context).size.height * 0.75,
+      width: MediaQuery.maybeOf(context).size.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -162,7 +162,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
     return InkWell(
       onTap: () => _selectDate(context),
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         height: 50,
         margin: EdgeInsets.only(
           left: 30,
@@ -205,7 +205,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
       onTap: () => _validateForm() ? _submit() : null,
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.only(
           left: 30,
           right: 30,
@@ -240,7 +240,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
       },
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.only(left: 30, right: 30, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,

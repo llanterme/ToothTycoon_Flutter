@@ -44,7 +44,7 @@ class _TellYourFriendScreenState extends State<TellYourFriendScreen> {
               ),
               Container(
                 color: AppColors.COLOR_PRIMARY.withOpacity(0.7),
-                child: MediaQuery.of(context).size.height <= 639
+                child: MediaQuery.maybeOf(context).size.height <= 639
                     ? _scrollableMainView()
                     : _nonScrollableMainView(),
               ),
@@ -82,7 +82,7 @@ class _TellYourFriendScreenState extends State<TellYourFriendScreen> {
 
   Widget _appBar() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       margin: EdgeInsets.only(left: 20, right: 20, top: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -227,7 +227,7 @@ class _TellYourFriendScreenState extends State<TellYourFriendScreen> {
           .navigateToReplacementNamed(Constants.KEY_ROUTE_SHARE_SCREEN),
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.only(
           left: 50,
           right: 50,

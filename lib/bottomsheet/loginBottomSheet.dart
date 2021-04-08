@@ -60,7 +60,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
       height: Platform.isIOS ? 500 : 420,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -210,7 +210,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
 
   Widget _forgotPasswordBtn() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       margin: EdgeInsets.only(left: 30, right: 30, top: 10),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -247,7 +247,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
       ),*/
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.only(left: 30, right: 30, top: 10),
         decoration: BoxDecoration(
           color: AppColors.COLOR_BTN_BLUE,
@@ -290,7 +290,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
       onTap: () => !_isFacebookLoading ? _faceBookSignIn() : null,
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         padding: EdgeInsets.only(left: 10, right: 10),
         margin: EdgeInsets.only(
           left: 30,
@@ -340,7 +340,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
       onTap: () => _appleSignIn(),
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         padding: EdgeInsets.only(left: 10, right: 10),
         margin: EdgeInsets.only(
           left: 30,
@@ -393,7 +393,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
         widget.signupFunction();
       },
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -499,8 +499,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
       setState(() {
         _isFacebookLoading = true;
       });
-      AuthCredential facebookAuthCred =
-          FacebookAuthProvider.credential(result);
+      AuthCredential facebookAuthCred = FacebookAuthProvider.credential(result);
       UserCredential user =
           await FirebaseAuth.instance.signInWithCredential(facebookAuthCred);
       _faceBookUser = user.user;

@@ -35,8 +35,8 @@ class _CustomWebViewState extends State<CustomWebView> {
         title: new Text("Facebook login"),
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.maybeOf(context).size.height,
+        width: MediaQuery.maybeOf(context).size.width,
         child: WebView(
           initialUrl: widget.selectedUrl,
           onWebViewCreated: (WebViewController webViewController) {

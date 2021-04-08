@@ -35,8 +35,8 @@ class _CongratulationAfterToothPullScreenState
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
           body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.maybeOf(context).size.height,
+            width: MediaQuery.maybeOf(context).size.width,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: FileImage(
@@ -46,8 +46,8 @@ class _CongratulationAfterToothPullScreenState
               ),
             ),
             child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.maybeOf(context).size.height,
+              width: MediaQuery.maybeOf(context).size.width,
               color: AppColors.COLOR_PRIMARY.withOpacity(0.7),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -66,7 +66,7 @@ class _CongratulationAfterToothPullScreenState
 
   Widget _appBar() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -97,7 +97,7 @@ class _CongratulationAfterToothPullScreenState
         fit: StackFit.expand,
         children: [
           Container(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.maybeOf(context).size.width,
             child: Center(
               child: ImageSequenceAnimator(
                 'assets/images/congratulationsAnimationImages',
@@ -132,7 +132,7 @@ class _CongratulationAfterToothPullScreenState
         height: 95,
         width: 95,
         margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.19, left: 5),
+            top: MediaQuery.maybeOf(context).size.height * 0.19, left: 5),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
         ),
@@ -155,8 +155,8 @@ class _CongratulationAfterToothPullScreenState
 
   Widget _congratulationWidget() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.34,
-      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.maybeOf(context).size.height * 0.34,
+      width: MediaQuery.maybeOf(context).size.width,
       margin: EdgeInsets.only(top: 5),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -201,7 +201,7 @@ class _CongratulationAfterToothPullScreenState
       },
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.only(
           left: 50,
           right: 50,
@@ -237,7 +237,7 @@ class _CongratulationAfterToothPullScreenState
       },
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.only(left: 50, right: 50, top: 15, bottom: 20),
         decoration: BoxDecoration(
           color: AppColors.COLOR_LIGHT_YELLOW,

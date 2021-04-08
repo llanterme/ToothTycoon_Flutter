@@ -48,8 +48,8 @@ class _QuestionAnsScreenState extends State<QuestionAnsScreen> {
           body: _isLoading
               ? _loadingPage()
               : Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.maybeOf(context).size.height,
+                  width: MediaQuery.maybeOf(context).size.width,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -66,7 +66,7 @@ class _QuestionAnsScreenState extends State<QuestionAnsScreen> {
 
   Widget _appBar() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -103,7 +103,7 @@ class _QuestionAnsScreenState extends State<QuestionAnsScreen> {
 
   Widget _questionWidget() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       margin: EdgeInsets.only(top: 5),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -182,8 +182,8 @@ class _QuestionAnsScreenState extends State<QuestionAnsScreen> {
         });
       },
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.08,
-        width: MediaQuery.of(context).size.height,
+        height: MediaQuery.maybeOf(context).size.height * 0.08,
+        width: MediaQuery.maybeOf(context).size.height,
         margin: EdgeInsets.only(left: 20, right: 20, top: 15),
         decoration: BoxDecoration(
           color: _selectedAns == ANS_YES
@@ -235,8 +235,8 @@ class _QuestionAnsScreenState extends State<QuestionAnsScreen> {
         });
       },
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.08,
-        width: MediaQuery.of(context).size.height,
+        height: MediaQuery.maybeOf(context).size.height * 0.08,
+        width: MediaQuery.maybeOf(context).size.height,
         margin: EdgeInsets.only(left: 20, right: 20, top: 15),
         decoration: BoxDecoration(
           color: _selectedAns == ANS_NO
@@ -312,8 +312,8 @@ class _QuestionAnsScreenState extends State<QuestionAnsScreen> {
         }
       },
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.08,
-        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.maybeOf(context).size.height * 0.08,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
         decoration: BoxDecoration(
           color: AppColors.COLOR_PRIMARY,
@@ -337,8 +337,8 @@ class _QuestionAnsScreenState extends State<QuestionAnsScreen> {
 
   Widget _loadingPage() {
     return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.maybeOf(context).size.height,
+      width: MediaQuery.maybeOf(context).size.width,
       color: AppColors.COLOR_PRIMARY,
       child: Center(
         child: CircularProgressIndicator(

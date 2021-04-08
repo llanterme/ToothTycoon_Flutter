@@ -26,8 +26,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       backgroundColor: AppColors.COLOR_PRIMARY,
       body: SafeArea(
         child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.maybeOf(context).size.height,
+          width: MediaQuery.maybeOf(context).size.width,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -45,15 +45,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Widget _appIconWidget() {
     return VideoPlayerWidget(
-      height: MediaQuery.of(context).size.height * 0.30,
-      width: (MediaQuery.of(context).size.height * 0.30) * ratio,
+      height: MediaQuery.maybeOf(context).size.height * 0.30,
+      width: (MediaQuery.maybeOf(context).size.height * 0.30) * ratio,
       videoPath: _welcomeAnimationPath,
     );
   }
 
   Widget _welcomeText() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       child: Center(
         child: Text(
           'Welcome to\nTooth Tycoon',
@@ -70,7 +70,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Widget _slider() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.25,
+      height: MediaQuery.maybeOf(context).size.height * 0.25,
       margin: EdgeInsets.only(top: 25),
       child: PageView(
         controller: _pageController,
@@ -206,7 +206,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       onTap: () => _openSignupBottomSheet(),
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.only(left: 30, right: 30, top: 60),
         decoration: BoxDecoration(
           color: AppColors.COLOR_BTN_BLUE,
@@ -233,7 +233,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       onTap: () => _openLoginBottomSheet(),
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.only(left: 30, right: 30, top: 20),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -265,8 +265,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.maybeOf(context).viewInsets.bottom),
         child: SignupBottomSheet(
           loginFunction: _openLoginBottomSheet,
         ),
@@ -284,8 +284,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.maybeOf(context).viewInsets.bottom),
         child: LoginBottomSheet(
           signupFunction: _openSignupBottomSheet,
           resetPasswordFunction: _openResetPasswordBottomSheet,
@@ -305,8 +305,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.maybeOf(context).viewInsets.bottom),
         child: ResetPasswordBottomSheet(
           email: email,
           loginFunction: _openLoginBottomSheet,

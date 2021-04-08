@@ -45,8 +45,8 @@ class _InvestScreenState extends State<InvestScreen> {
       child: SafeArea(
         child: Scaffold(
           body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.maybeOf(context).size.height,
+            width: MediaQuery.maybeOf(context).size.width,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: FileImage(
@@ -56,8 +56,8 @@ class _InvestScreenState extends State<InvestScreen> {
               ),
             ),
             child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.maybeOf(context).size.height,
+              width: MediaQuery.maybeOf(context).size.width,
               color: AppColors.COLOR_PRIMARY.withOpacity(0.7),
               child: SingleChildScrollView(
                 child: Column(
@@ -78,7 +78,7 @@ class _InvestScreenState extends State<InvestScreen> {
 
   Widget _appBar() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       margin: EdgeInsets.only(left: 20, right: 20, top: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -113,7 +113,7 @@ class _InvestScreenState extends State<InvestScreen> {
 
   Widget _congratulationWidget() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       margin: EdgeInsets.only(top: 5),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -168,7 +168,7 @@ class _InvestScreenState extends State<InvestScreen> {
 
   Widget _yearWidget() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -260,7 +260,7 @@ class _InvestScreenState extends State<InvestScreen> {
 
   Widget _interestRateWidget() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -352,7 +352,7 @@ class _InvestScreenState extends State<InvestScreen> {
   Widget _futureValueWidget() {
     return Container(
       height: 70,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.maybeOf(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       padding: EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
@@ -401,7 +401,7 @@ class _InvestScreenState extends State<InvestScreen> {
       onTap: () => !_isLoading ? _invest() : null,
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.only(
           left: 50,
           right: 50,

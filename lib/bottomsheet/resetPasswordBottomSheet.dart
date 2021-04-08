@@ -45,8 +45,8 @@ class _ResetPasswordBottomSheetState extends State<ResetPasswordBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.71,
-      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.maybeOf(context).size.height * 0.71,
+      width: MediaQuery.maybeOf(context).size.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -249,7 +249,7 @@ class _ResetPasswordBottomSheetState extends State<ResetPasswordBottomSheet> {
       onTap: () => _validateForm() ? _resetPassword() : null,
       child: Container(
         height: 50,
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.maybeOf(context).size.width,
         margin: EdgeInsets.only(left: 30, right: 30, top: 30),
         decoration: BoxDecoration(
           color: AppColors.COLOR_BTN_BLUE,

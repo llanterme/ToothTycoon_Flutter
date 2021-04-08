@@ -32,8 +32,8 @@ class _DeviceNotSupportedScreenState extends State<DeviceNotSupportedScreen> {
       backgroundColor: AppColors.COLOR_PRIMARY,
       body: SafeArea(
         child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.maybeOf(context).size.height,
+          width: MediaQuery.maybeOf(context).size.width,
           child: Center(
             child: Text(
               'This Device is Not Supported',
