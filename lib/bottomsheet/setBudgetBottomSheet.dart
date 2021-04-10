@@ -60,7 +60,7 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
       height: 470,
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -186,7 +186,7 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
   Widget _currencyListWidget() {
     return Container(
       height: 60,
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
       child: ListView.builder(
         itemCount: _currencyList != null && _currencyList.isNotEmpty
@@ -237,7 +237,7 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
       onTap: () => _validate() ? _submit() : null,
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.only(
           left: 30,
           right: 30,
@@ -272,7 +272,7 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
       },
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.only(left: 30, right: 30, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,

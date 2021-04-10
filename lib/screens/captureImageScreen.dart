@@ -72,8 +72,8 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
               : _isImageCapture
                   ? _imageWidget()
                   : Container(
-                      height: MediaQuery.maybeOf(context).size.height,
-                      width: MediaQuery.maybeOf(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
                       child: controller != null
                           ? _cameraPreviewWidget()
                           : Container(),
@@ -90,7 +90,7 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
         Positioned(
           bottom: 0,
           child: Container(
-            height: MediaQuery.maybeOf(context).size.width * (16 / 9),
+            height: MediaQuery.of(context).size.width * (16 / 9),
             child: AspectRatio(
               aspectRatio: controller.value.aspectRatio,
               child: CameraPreview(controller),
@@ -110,7 +110,7 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
                 AppColors.COLOR_PRIMARY.withOpacity(0.0),
               ],
             )),
-            width: MediaQuery.maybeOf(context).size.width,
+            width: MediaQuery.of(context).size.width,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -183,8 +183,8 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
 
   Widget _imageWidget() {
     return Container(
-      height: MediaQuery.maybeOf(context).size.height,
-      width: MediaQuery.maybeOf(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
       child: Image.file(
         File(imagePath),
         fit: BoxFit.fill,
@@ -291,8 +291,8 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
 
   Widget _loadingPage() {
     return Container(
-      height: MediaQuery.maybeOf(context).size.height,
-      width: MediaQuery.maybeOf(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
       color: AppColors.COLOR_PRIMARY,
       child: Center(
         child: CircularProgressIndicator(

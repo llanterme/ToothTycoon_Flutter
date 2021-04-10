@@ -21,7 +21,7 @@ class _ReceiveBadgeScreenState extends State<ReceiveBadgeScreen> {
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
           body: Container(
-            child: MediaQuery.maybeOf(context).size.height <= 639
+            child: MediaQuery.of(context).size.height <= 639
                 ? _scrollableWidget()
                 : _nonScrollableMainWidget(),
           ),
@@ -57,7 +57,7 @@ class _ReceiveBadgeScreenState extends State<ReceiveBadgeScreen> {
 
   Widget _appBar() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -92,7 +92,7 @@ class _ReceiveBadgeScreenState extends State<ReceiveBadgeScreen> {
 
   Widget _congratulationWidget() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(top: 5),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -148,8 +148,8 @@ class _ReceiveBadgeScreenState extends State<ReceiveBadgeScreen> {
     return Container(
       margin: EdgeInsets.only(bottom: 20),
       child: VideoPlayerWidget(
-        height: MediaQuery.maybeOf(context).size.height * 0.40,
-        width: (MediaQuery.maybeOf(context).size.height * 0.40) * _ratio,
+        height: MediaQuery.of(context).size.height * 0.40,
+        width: (MediaQuery.of(context).size.height * 0.40) * _ratio,
         videoPath: 'assets/videos/badge_video_sound.mp4',
         isVideoLooping: true,
       ),
@@ -158,8 +158,8 @@ class _ReceiveBadgeScreenState extends State<ReceiveBadgeScreen> {
 
   Widget _animationWidget() {
     return Container(
-      height: MediaQuery.maybeOf(context).size.height * 0.30,
-      width: MediaQuery.maybeOf(context).size.height * 0.30,
+      height: MediaQuery.of(context).size.height * 0.30,
+      width: MediaQuery.of(context).size.height * 0.30,
       child: Center(
         child: Image.asset(
           'assets/icons/ic_badges_list.gif',
@@ -192,7 +192,7 @@ class _ReceiveBadgeScreenState extends State<ReceiveBadgeScreen> {
       },
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
         decoration: BoxDecoration(
           color: AppColors.COLOR_PRIMARY,

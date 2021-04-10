@@ -44,8 +44,8 @@ class _ChildDetailState extends State<ChildDetail> {
         backgroundColor: AppColors.COLOR_PRIMARY,
         body: SafeArea(
           child: Container(
-            height: MediaQuery.maybeOf(context).size.height,
-            width: MediaQuery.maybeOf(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +64,7 @@ class _ChildDetailState extends State<ChildDetail> {
 
   Widget _appBar() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -188,7 +188,7 @@ class _ChildDetailState extends State<ChildDetail> {
   Widget _tabBar() {
     return Container(
       height: 30,
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,

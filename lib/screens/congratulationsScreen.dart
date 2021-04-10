@@ -28,8 +28,8 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
           body: Container(
-            height: MediaQuery.maybeOf(context).size.height,
-            width: MediaQuery.maybeOf(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -46,7 +46,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
 
   Widget _appBar() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -83,7 +83,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
 
   Widget _congratulationWidget() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(top: 5),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -127,8 +127,8 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
         children: [
           Image.asset(
             'assets/icons/ic_congratulations_eclips.png',
-            height: MediaQuery.maybeOf(context).size.width * 0.30,
-            width: MediaQuery.maybeOf(context).size.width * 0.30,
+            height: MediaQuery.of(context).size.width * 0.30,
+            width: MediaQuery.of(context).size.width * 0.30,
           ),
           AutoSizeText.rich(
             TextSpan(
@@ -186,7 +186,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
       },
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
         decoration: BoxDecoration(
           color: AppColors.COLOR_PRIMARY,

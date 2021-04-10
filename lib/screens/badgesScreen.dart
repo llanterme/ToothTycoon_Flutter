@@ -47,7 +47,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
         crossAxisSpacing: 14,
         mainAxisSpacing: 10,
         childAspectRatio:
-            (((MediaQuery.maybeOf(context).size.width) / 2) / 410),
+            (((MediaQuery.of(context).size.width) / 2) / 410),
         primary: false,
         children: List.generate(
           _badgesList != null && _badgesList.isNotEmpty
@@ -134,7 +134,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
   Widget _noDataWidget() {
     return Expanded(
       child: Container(
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -150,8 +150,8 @@ class _BadgesScreenState extends State<BadgesScreen> {
   Widget _noDataIcon() {
     return Image.asset(
       'assets/icons/ic_no_data.png',
-      height: MediaQuery.maybeOf(context).size.height * 0.30,
-      width: MediaQuery.maybeOf(context).size.width * 0.70,
+      height: MediaQuery.of(context).size.height * 0.30,
+      width: MediaQuery.of(context).size.width * 0.70,
     );
   }
 

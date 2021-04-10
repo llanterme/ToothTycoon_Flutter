@@ -21,6 +21,8 @@ class SummaryScreen extends StatefulWidget {
 class _SummaryScreenState extends State<SummaryScreen> {
   APIService _apiService = APIService();
 
+  final ScrollController _scrollController = ScrollController();
+
   bool _isLoading = true;
   bool _isDataAvail = true;
 
@@ -41,20 +43,27 @@ class _SummaryScreenState extends State<SummaryScreen> {
         : !_isDataAvail
             ? _noDataWidget()
             : Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _child1(),
-                      _child2(),
-                      SizedBox(
-                        height: MediaQuery.maybeOf(context).size.height * 0.15,
-                      ),
-                      _collectToothBtn(),
-                      _keepMouthHealthyBtn(),
-                      _cashOutBtn(),
-                    ],
+                child: Scrollbar(
+                  controller: _scrollController,
+                  isAlwaysShown: true,
+                  thickness: 6,
+                  radius: Radius.circular(5),
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _child1(),
+                        _child2(),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                        ),
+                        _collectToothBtn(),
+                        _keepMouthHealthyBtn(),
+                        _cashOutBtn(),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -63,7 +72,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
   Widget _child1() {
     return Container(
       height: 100,
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: Card(
         child: ListTile(
@@ -98,7 +107,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
   Widget _child2() {
     return Container(
       height: 100,
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: Card(
         child: ListTile(
@@ -136,7 +145,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
           .navigateToReplacementNamed(Constants.KEY_ROUTE_PULL_TOOTH),
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
         decoration: BoxDecoration(
           color: AppColors.COLOR_LIGHT_YELLOW,
@@ -164,7 +173,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
           .navigateToReplacementNamed(Constants.KEY_ROUTE_QUESTION_AND_ANSWER),
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -205,7 +214,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
       },
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           color: AppColors.COLOR_LIGHT_YELLOW,
@@ -230,7 +239,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
   Widget _noDataWidget() {
     return Expanded(
       child: Container(
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -249,8 +258,8 @@ class _SummaryScreenState extends State<SummaryScreen> {
   Widget _noDataIcon() {
     return Image.asset(
       'assets/icons/ic_no_data.png',
-      height: MediaQuery.maybeOf(context).size.height * 0.30,
-      width: MediaQuery.maybeOf(context).size.width * 0.70,
+      height: MediaQuery.of(context).size.height * 0.30,
+      width: MediaQuery.of(context).size.width * 0.70,
     );
   }
 
@@ -268,7 +277,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
   Widget _loadingPage() {
     return Expanded(
       child: Container(
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         color: AppColors.COLOR_PRIMARY,
         child: Center(
           child: CircularProgressIndicator(

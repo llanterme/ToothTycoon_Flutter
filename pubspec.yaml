@@ -40,12 +40,11 @@ dependencies:
   image_sequence_animator: "1.0.6"
   apple_sign_in: "0.1.0"
   webview_flutter: "0.3.23"
-  firebase_auth: "0.18.4+1"
+  firebase_auth: ^0.15.4
   auto_size_text: "2.1.0"
-  age: "0.0.1"
   esys_flutter_share: ^1.0.2
-  f_logs: ^1.2.2
   synchronized: 2.1.0+1
+  draggable_scrollbar: ^0.0.4
 
 dev_dependencies:
   flutter_test:

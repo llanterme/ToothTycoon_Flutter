@@ -79,7 +79,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget _instructionText() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       child: Center(
         child: Text(
           'Tap a tooth to view history',
@@ -100,21 +100,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
         children: [
           _isVideoVisible
               ? Container(
-                  width: MediaQuery.maybeOf(context).size.width,
+                  width: MediaQuery.of(context).size.width,
                   child: Center(
                     child: _videoPlayerWidget(
-                      MediaQuery.maybeOf(context).size.height * 0.40,
-                      (MediaQuery.maybeOf(context).size.height * 0.40) * ratio,
+                      MediaQuery.of(context).size.height * 0.40,
+                      (MediaQuery.of(context).size.height * 0.40) * ratio,
                     ),
                   ),
                 )
               : Container(
-                  width: MediaQuery.maybeOf(context).size.width,
+                  width: MediaQuery.of(context).size.width,
                   child: Center(
                     child: Image.asset(
                       'assets/icons/ic_mouth_open.png',
-                      height: MediaQuery.maybeOf(context).size.height * 0.40,
-                      width: (MediaQuery.maybeOf(context).size.height * 0.40) *
+                      height: MediaQuery.of(context).size.height * 0.40,
+                      width: (MediaQuery.of(context).size.height * 0.40) *
                           ratio,
                       fit: BoxFit.fill,
                     ),
@@ -144,22 +144,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget _clickableRegionWidget() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       child: Center(
         child: Container(
-          height: MediaQuery.maybeOf(context).size.height * 0.40,
-          width: (MediaQuery.maybeOf(context).size.height * 0.40) * ratio,
+          height: MediaQuery.of(context).size.height * 0.40,
+          width: (MediaQuery.of(context).size.height * 0.40) * ratio,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
-                height: MediaQuery.maybeOf(context).size.height * 0.0700,
+                height: MediaQuery.of(context).size.height * 0.0700,
               ),
               _topClickableRegionWidget(),
               Spacer(),
               _bottomClickableRegionWidget(),
               SizedBox(
-                height: MediaQuery.maybeOf(context).size.height * 0.0700,
+                height: MediaQuery.of(context).size.height * 0.0700,
               ),
             ],
           ),
@@ -171,9 +171,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _topClickableRegionWidget() {
     return Container(
       height: 80,
-      width: (MediaQuery.maybeOf(context).size.height * 0.30) * ratio,
+      width: (MediaQuery.of(context).size.height * 0.30) * ratio,
       margin: EdgeInsets.symmetric(
-          horizontal: MediaQuery.maybeOf(context).size.width * 0.13),
+          horizontal: MediaQuery.of(context).size.width * 0.13),
       padding: EdgeInsets.only(right: 5),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -388,9 +388,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _bottomClickableRegionWidget() {
     return Container(
       height: 65,
-      width: (MediaQuery.maybeOf(context).size.height * 0.30) * ratio,
+      width: (MediaQuery.of(context).size.height * 0.30) * ratio,
       margin: EdgeInsets.symmetric(
-          horizontal: MediaQuery.maybeOf(context).size.width * 0.16),
+          horizontal: MediaQuery.of(context).size.width * 0.16),
       padding: EdgeInsets.only(right: 5),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -620,7 +620,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _collectedDateWidget() {
     return Container(
       height: 56,
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(
         horizontal: 20,
       ),
@@ -663,7 +663,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _currentValueWidget() {
     return Container(
       height: 56,
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       padding: EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
@@ -704,7 +704,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _noDataWidget() {
     return Expanded(
       child: Container(
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -720,8 +720,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _noDataIcon() {
     return Image.asset(
       'assets/icons/ic_no_data.png',
-      height: MediaQuery.maybeOf(context).size.height * 0.30,
-      width: MediaQuery.maybeOf(context).size.width * 0.70,
+      height: MediaQuery.of(context).size.height * 0.30,
+      width: MediaQuery.of(context).size.width * 0.70,
     );
   }
 

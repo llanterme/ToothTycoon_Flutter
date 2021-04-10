@@ -50,7 +50,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
           body: Container(
-            child: MediaQuery.maybeOf(context).size.height <= 639
+            child: MediaQuery.of(context).size.height <= 639
                 ? _scrollableMainWidget()
                 : _nonScrollableMainWidget(),
           ),
@@ -86,7 +86,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
 
   Widget _appBar() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -121,7 +121,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
 
   Widget _congratulationWidget() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(top: 5),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -176,7 +176,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
   Widget _balanceWidget() {
     return Container(
       height: 70,
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(left: 30, right: 30, top: 30),
       padding: EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
@@ -222,7 +222,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
 
   Widget _withdrawBalanceWidget() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -314,7 +314,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
       onTap: () => !_isLoading ? _withdrawCash() : null,
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
         decoration: BoxDecoration(
           color: AppColors.COLOR_PRIMARY,

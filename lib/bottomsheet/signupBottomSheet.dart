@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
@@ -42,7 +43,6 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
   FocusNode _passwordFocusNode = FocusNode();
 
   FirebaseUser _faceBookUser;
-  FirebaseAuth _auth = FirebaseAuth.instance;
 
   String _faceBookRedirectUrl =
       'https://toothtycoon-41347.firebaseapp.com/__/auth/handler';
@@ -52,7 +52,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
       height: Platform.isIOS ? 500 : 410,
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -206,7 +206,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
       onTap: () => _validateForm() ? _submit() : null,
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.only(left: 30, right: 30, top: 15),
         decoration: BoxDecoration(
           color: AppColors.COLOR_BTN_BLUE,
@@ -249,7 +249,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
       onTap: () => _faceBookSignIn(),
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.only(left: 10, right: 10),
         margin: EdgeInsets.only(
           left: 30,
@@ -299,7 +299,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
       onTap: () => _appleSignIn(),
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.only(left: 10, right: 10),
         margin: EdgeInsets.only(
           left: 30,
@@ -352,7 +352,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
         widget.loginFunction();
       },
       child: Container(
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -444,8 +444,8 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
         _isFacebookLoading = true;
       });
 
-      AuthCredential facebookAuthCred = FacebookAuthProvider.credential(result);
-      UserCredential user =
+      AuthCredential facebookAuthCred = FacebookAuthProvider.getCredential(accessToken: result);
+      AuthResult user =
           await FirebaseAuth.instance.signInWithCredential(facebookAuthCred);
       _faceBookUser = user.user;
       print(user);

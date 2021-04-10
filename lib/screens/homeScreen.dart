@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('Device Height : ${MediaQuery.maybeOf(context).size.height}');
+    print('Device Height : ${MediaQuery.of(context).size.height}');
     return WillPopScope(
       onWillPop: _onBackPress,
       child: Scaffold(
@@ -164,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 //     text: 'Tooth Tycoon\nhttps://google.co.in');
               },
               child: Container(
-                width: MediaQuery.maybeOf(context).size.width,
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(
@@ -185,8 +185,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Container(
-                      height: MediaQuery.maybeOf(context).size.height * 0.02,
-                      width: MediaQuery.maybeOf(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.02,
+                      width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                           color: AppColors.COLOR_LIGHT_YELLOW,
                           borderRadius: BorderRadius.only(
@@ -207,17 +207,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       child: Image.asset(
         'assets/icons/ic_set_budget.png',
-        height: MediaQuery.maybeOf(context).size.width * 0.25,
-        width: MediaQuery.maybeOf(context).size.width * 0.25,
+        height: MediaQuery.of(context).size.width * 0.25,
+        width: MediaQuery.of(context).size.width * 0.25,
       ),
     );
   }
 
   Widget _setBudgetText() {
     return Container(
-      height: MediaQuery.maybeOf(context).size.height * 0.10,
+      height: MediaQuery.of(context).size.height * 0.10,
       margin: EdgeInsets.only(left: 20),
-      width: MediaQuery.maybeOf(context).size.width * 0.50,
+      width: MediaQuery.of(context).size.width * 0.50,
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: InkWell(
           onTap: () => _openAddChildBottomSheet(),
           child: Container(
-            width: MediaQuery.maybeOf(context).size.width,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(
@@ -278,8 +278,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Container(
-                  height: MediaQuery.maybeOf(context).size.height * 0.02,
-                  width: MediaQuery.maybeOf(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.02,
+                  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: AppColors.COLOR_LIGHT_GREEN,
                     borderRadius: BorderRadius.only(
@@ -300,16 +300,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       child: Image.asset(
         'assets/icons/ic_add_child.png',
-        height: MediaQuery.maybeOf(context).size.width * 0.25,
-        width: MediaQuery.maybeOf(context).size.width * 0.25,
+        height: MediaQuery.of(context).size.width * 0.25,
+        width: MediaQuery.of(context).size.width * 0.25,
       ),
     );
   }
 
   Widget _addChildText() {
     return Container(
-      height: MediaQuery.maybeOf(context).size.height * 0.10,
-      width: MediaQuery.maybeOf(context).size.width * 0.50,
+      height: MediaQuery.of(context).size.height * 0.10,
+      width: MediaQuery.of(context).size.width * 0.50,
       margin: EdgeInsets.only(left: 20),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -357,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
           child: Container(
-            width: MediaQuery.maybeOf(context).size.width,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(
@@ -378,8 +378,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Container(
-                  height: MediaQuery.maybeOf(context).size.height * 0.02,
-                  width: MediaQuery.maybeOf(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.02,
+                  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       color: AppColors.COLOR_LIGHT_BLUE,
                       borderRadius: BorderRadius.only(
@@ -398,16 +398,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       child: Image.asset(
         'assets/icons/ic_view_children.png',
-        height: MediaQuery.maybeOf(context).size.width * 0.25,
-        width: MediaQuery.maybeOf(context).size.width * 0.25,
+        height: MediaQuery.of(context).size.width * 0.25,
+        width: MediaQuery.of(context).size.width * 0.25,
       ),
     );
   }
 
   Widget _viewChildrenText() {
     return Container(
-      height: MediaQuery.maybeOf(context).size.height * 0.10,
-      width: MediaQuery.maybeOf(context).size.width * 0.50,
+      height: MediaQuery.of(context).size.height * 0.10,
+      width: MediaQuery.of(context).size.width * 0.50,
       margin: EdgeInsets.only(left: 20),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -440,8 +440,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _loadingPage() {
     return Container(
-      height: MediaQuery.maybeOf(context).size.height,
-      width: MediaQuery.maybeOf(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
       color: AppColors.COLOR_PRIMARY,
       child: Center(
         child: CircularProgressIndicator(
@@ -461,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       builder: (BuildContext context) => Padding(
         padding: EdgeInsets.only(
-            bottom: MediaQuery.maybeOf(context).viewInsets.bottom),
+            bottom: MediaQuery.of(context).viewInsets.bottom),
         child: SetBudgetBottomSheet(),
       ),
     );
@@ -477,7 +477,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       builder: (BuildContext context) => Padding(
         padding: EdgeInsets.only(
-            bottom: MediaQuery.maybeOf(context).viewInsets.bottom),
+            bottom: MediaQuery.of(context).viewInsets.bottom),
         child: AddChildBottomSheet(),
       ),
     );

@@ -40,7 +40,7 @@ class _ShareScreenState extends State<ShareScreen> {
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
           body: Container(
-            child: MediaQuery.maybeOf(context).size.height <= 639
+            child: MediaQuery.of(context).size.height <= 639
                 ? _scrollableMainWidget()
                 : _nonScrollableMainWidget(),
           ),
@@ -76,7 +76,7 @@ class _ShareScreenState extends State<ShareScreen> {
 
   Widget _appBar() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(left: 20, right: 20, top: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -255,7 +255,7 @@ class _ShareScreenState extends State<ShareScreen> {
       },
       child: Container(
         height: 50,
-        width: MediaQuery.maybeOf(context).size.width,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.only(
           left: 50,
           right: 50,

@@ -34,8 +34,8 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
           body: Container(
-            height: MediaQuery.maybeOf(context).size.height,
-            width: MediaQuery.maybeOf(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: FileImage(
@@ -45,8 +45,8 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
               ),
             ),
             child: Container(
-              height: MediaQuery.maybeOf(context).size.height,
-              width: MediaQuery.maybeOf(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
               color: AppColors.COLOR_PRIMARY.withOpacity(0.7),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -67,7 +67,7 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
 
   Widget _appBar() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -108,8 +108,8 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
 
   Widget _animationWidget() {
     return Container(
-      height: MediaQuery.maybeOf(context).size.height * 0.40,
-      width: MediaQuery.maybeOf(context).size.width * 0.70,
+      height: MediaQuery.of(context).size.height * 0.40,
+      width: MediaQuery.of(context).size.width * 0.70,
       child: Image.asset('assets/icons/ic_analyzing.gif'),
     );
   }
@@ -130,7 +130,7 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
 
   Widget _linearProgressWidget() {
     return Container(
-      width: MediaQuery.maybeOf(context).size.width,
+      width: MediaQuery.of(context).size.width,
       height: 8,
       margin: EdgeInsets.only(top: 20, left: 60, right: 60),
       child: ClipRRect(
@@ -158,7 +158,7 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
             : null,
         child: Container(
           height: 50,
-          width: MediaQuery.maybeOf(context).size.width,
+          width: MediaQuery.of(context).size.width,
           margin: EdgeInsets.only(bottom: 25, left: 30, right: 30),
           decoration: BoxDecoration(
             color: AppColors.COLOR_LIGHT_YELLOW,
