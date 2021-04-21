@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -499,7 +500,8 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
       setState(() {
         _isFacebookLoading = true;
       });
-      AuthCredential facebookAuthCred = FacebookAuthProvider.getCredential(accessToken: result);
+      AuthCredential facebookAuthCred =
+          FacebookAuthProvider.getCredential(accessToken: result);
       AuthResult user =
           await FirebaseAuth.instance.signInWithCredential(facebookAuthCred);
       _faceBookUser = user.user;
@@ -536,7 +538,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
               print(result.credential.user); //All the required credentials
               final AppleIdCredential appleIdCredential = result.credential;
               _socialLogin(appleIdCredential.fullName.givenName,
-                  appleIdCredential.fullName.givenName, '', 'apple');
+                  appleIdCredential.email, "0", 'apple');
             } catch (e) {
               print("error");
             }

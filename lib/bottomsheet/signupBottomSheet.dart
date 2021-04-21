@@ -444,7 +444,8 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
         _isFacebookLoading = true;
       });
 
-      AuthCredential facebookAuthCred = FacebookAuthProvider.getCredential(accessToken: result);
+      AuthCredential facebookAuthCred =
+          FacebookAuthProvider.getCredential(accessToken: result);
       AuthResult user =
           await FirebaseAuth.instance.signInWithCredential(facebookAuthCred);
       _faceBookUser = user.user;
@@ -481,7 +482,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
               print(result.credential.user); //All the required credentials
               final AppleIdCredential appleIdCredential = result.credential;
               _socialLogin(appleIdCredential.fullName.givenName,
-                  appleIdCredential.fullName.givenName, '', 'apple');
+                  appleIdCredential.email, "01", 'apple');
             } catch (e) {
               print("error");
             }
