@@ -202,25 +202,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _signupBtn() {
-    return InkWell(
-      onTap: () => _openSignupBottomSheet(),
-      child: Container(
-        height: 50,
-        width: MediaQuery.of(context).size.width,
-        margin: EdgeInsets.only(left: 30, right: 30, top: 60),
-        decoration: BoxDecoration(
-          color: AppColors.COLOR_BTN_BLUE,
-          borderRadius: BorderRadius.all(
-            Radius.circular(30),
+    return SingleChildScrollView(
+      child: InkWell(
+        onTap: () => _openSignupBottomSheet(),
+        child: Container(
+          height: 50,
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.only(left: 30, right: 30, top: 60),
+          decoration: BoxDecoration(
+            color: AppColors.COLOR_BTN_BLUE,
+            borderRadius: BorderRadius.all(
+              Radius.circular(30),
+            ),
           ),
-        ),
-        child: Center(
-          child: Text(
-            'Sign Up',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-              fontFamily: 'Avenir',
+          child: Center(
+            child: Text(
+              'Sign Up',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+                fontFamily: 'Avenir',
+              ),
             ),
           ),
         ),
@@ -265,8 +267,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: SignupBottomSheet(
           loginFunction: _openLoginBottomSheet,
         ),
@@ -284,8 +286,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: LoginBottomSheet(
           signupFunction: _openSignupBottomSheet,
           resetPasswordFunction: _openResetPasswordBottomSheet,
@@ -305,8 +307,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: ResetPasswordBottomSheet(
           email: email,
           loginFunction: _openLoginBottomSheet,

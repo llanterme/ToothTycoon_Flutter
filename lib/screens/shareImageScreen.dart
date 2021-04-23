@@ -4,8 +4,10 @@ import 'dart:typed_data';
 
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
@@ -294,44 +296,23 @@ class _ShareScreenState extends State<ShareScreen> {
     );
   }
 
-  Future<Uint8List> _createImage(Widget widget) async {
+  Future<void> _createImage(Widget widget) async {
     try {
-      Future.delayed(Duration(milliseconds: 100), () async {
-        RenderRepaintBoundary boundary =
-            _globalKey.currentContext.findRenderObject();
-        ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-        ByteData byteData =
-            await image.toByteData(format: ui.ImageByteFormat.png);
-        var pngBytes = byteData.buffer.asUint8List();
-        // var bs64 = base64Encode(pngBytes);
-        // final directory = (await getExternalStorageDirectory()).path;
-        // File imgFile = new File('$directory/screenshot.png');
-        // imgFile.writeAsBytes(pngBytes);
-        // final RenderBox box = context.findRenderObject();
-        // share: ^0.6.5+4
-        /*Share.shareFiles(['$directory/screenshot.png'],
-          text: 'Tooth Tycoon\nhttps://google.co.in',
-          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
+      RenderRepaintBoundary boundary =
+          _globalKey.currentContext.findRenderObject();
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
 
-        await Share.files(
-            'tooth app image',
-            {
-              'toothapp.png': pngBytes,
-            },
-            '*/*',
-            text: 'Tooth Tycoon\nhttps://google.co.in');
+      ByteData byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData.buffer.asUint8List();
 
-        await Lager.log('Share Image Screen : Image Bytes : $pngBytes');
-
-        print(pngBytes);
-        //print(bs64);
-        //print('Base 64 Image $bs64');
-        setState(() {});
-      });
-      return pngBytes;
+      await Share.file(
+        'Tooth Tycoon', 'ToothTycoon.png',
+        pngBytes.buffer.asUint8List(), 'image/png',
+        //text: 'Tooth Tycoon!'
+      );
     } catch (e) {
       await Lager.log('Share Image Screen : Share Image Exception : $e');
-      Utils.showToast(message: e, durationInSecond: 2000);
     }
   }
 
