@@ -123,8 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: EdgeInsets.only(left: 20, right: 20, bottom: 30),
       child: Text(
         "Let's get started",
-        style:
-            TextStyle(fontSize: 33, color: Colors.white, fontFamily: 'Avenir'),
+        style: TextStyle(fontSize: 33, color: Colors.white, fontFamily: 'Avenir'),
       ),
     );
   }
@@ -190,8 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                           color: AppColors.COLOR_LIGHT_YELLOW,
                           borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(5),
-                              bottomRight: Radius.circular(5))),
+                              bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5))),
                     ),
                   ],
                 ),
@@ -224,10 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             'SET YOUR BUDGET',
-            style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w900,
-                fontFamily: 'Avenir'),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, fontFamily: 'Avenir'),
           ),
           SizedBox(
             height: 5,
@@ -317,10 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             'ADD A CHILD',
-            style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Avenir'),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, fontFamily: 'Avenir'),
           ),
           SizedBox(
             height: 5,
@@ -349,11 +341,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: InkWell(
           onTap: () {
             if (CommonResponse.budget != null) {
-              NavigationService.instance
-                  .navigateToReplacementNamed(Constants.KEY_ROUTE_VIEW_CHILD);
+              NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_VIEW_CHILD);
             } else {
-              Utils.showToast(
-                  message: 'Please set budget', durationInSecond: 3);
+              Utils.showToast(message: 'Please set budget', durationInSecond: 3);
             }
           },
           child: Container(
@@ -383,8 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   decoration: BoxDecoration(
                       color: AppColors.COLOR_LIGHT_BLUE,
                       borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(5),
-                          bottomRight: Radius.circular(5))),
+                          bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5))),
                 ),
               ],
             ),
@@ -415,10 +404,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             'VIEW YOUR CHILDREN',
-            style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Avenir'),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, fontFamily: 'Avenir'),
           ),
           SizedBox(
             height: 5,
@@ -460,8 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: SetBudgetBottomSheet(),
       ),
     );
@@ -476,8 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: AddChildBottomSheet(),
       ),
     );
@@ -491,8 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _logout() async {
     await PreferenceHelper().setLoginResponse(null);
     await PreferenceHelper().setIsUserLogin(false);
-    NavigationService.instance
-        .navigateToReplacementNamed(Constants.KEY_ROUTE_WELCOME);
+    NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_WELCOME);
   }
 
   void _getCurrency() async {
@@ -504,8 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
     String message = responseData[Constants.KEY_MESSAGE];
 
     if (response.statusCode == Constants.VAL_RESPONSE_STATUS_OK) {
-      CurrencyResponse currencyResponse =
-          CurrencyResponse.fromJson(responseData);
+      CurrencyResponse currencyResponse = CurrencyResponse.fromJson(responseData);
       CommonResponse.currencyResponse = currencyResponse;
 
       String selCurrencyId = await PreferenceHelper().getCurrencyId();

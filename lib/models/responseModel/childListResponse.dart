@@ -29,7 +29,7 @@ class ChildListResponse {
 
 class ChildData {
   int id;
-  String userId;
+  int userId;
   String name;
   int age;
   String img;
@@ -39,13 +39,13 @@ class ChildData {
 
   ChildData(
       {this.id,
-        this.userId,
-        this.name,
-        this.age,
-        this.img,
-        this.createdAt,
-        this.updatedAt,
-        this.teethCount});
+      this.userId,
+      this.name,
+      this.age,
+      this.img,
+      this.createdAt,
+      this.updatedAt,
+      this.teethCount});
 
   ChildData.fromJson(Map<String, dynamic> json) {
     id = json['id'];

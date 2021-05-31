@@ -15,8 +15,7 @@ class CongratulationAfterToothPullScreen extends StatefulWidget {
       _CongratulationAfterToothPullScreenState();
 }
 
-class _CongratulationAfterToothPullScreenState
-    extends State<CongratulationAfterToothPullScreen> {
+class _CongratulationAfterToothPullScreenState extends State<CongratulationAfterToothPullScreen> {
   bool _isShowAmount = false;
 
   int _amount = 0;
@@ -101,7 +100,7 @@ class _CongratulationAfterToothPullScreenState
             child: Center(
               child: ImageSequenceAnimator(
                 'assets/images/congratulationsAnimationImages',
-                'Congratulations_',
+                'Congratulations',
                 1,
                 4,
                 'png',
@@ -131,8 +130,7 @@ class _CongratulationAfterToothPullScreenState
       child: Container(
         height: 95,
         width: 95,
-        margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.19, left: 5),
+        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.19, left: 5),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
         ),
@@ -196,8 +194,7 @@ class _CongratulationAfterToothPullScreenState
   Widget _investBtn() {
     return InkWell(
       onTap: () {
-        NavigationService.instance
-            .navigateToReplacementNamed(Constants.KEY_ROUTE_INVEST_SCREEN);
+        NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_INVEST_SCREEN);
       },
       child: Container(
         height: 50,
@@ -232,8 +229,7 @@ class _CongratulationAfterToothPullScreenState
     return InkWell(
       onTap: () {
         CommonResponse.isFromChildSummary = false;
-        NavigationService.instance
-            .navigateToReplacementNamed(Constants.KEY_ROUTE_CASH_OUT_SCREEN);
+        NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_CASH_OUT_SCREEN);
       },
       child: Container(
         height: 50,
@@ -261,8 +257,7 @@ class _CongratulationAfterToothPullScreenState
   }
 
   Future<bool> _onBackPress() async {
-    NavigationService.instance
-        .navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
+    NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
 
     return true;
   }

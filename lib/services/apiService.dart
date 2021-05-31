@@ -6,7 +6,8 @@ import 'package:tooth_tycoon/models/postdataModel/signupPostDataModel.dart';
 import 'package:tooth_tycoon/models/postdataModel/socialLoginPostData.dart';
 
 class APIService {
-  final String baseUrl = 'http://tooth.orainfotech.com/api'; // Live
+  // final String baseUrl = 'http://tooth.orainfotech.com/api'; // Live
+  final String baseUrl = 'http://ec2-3-141-107-40.us-east-2.compute.amazonaws.com/api'; // Luke
   Map<String, dynamic> header = {'Accept': "application/json"};
 
   Future<http.Response> loginApiCall(LoginPostData loginPostData) async {
@@ -54,16 +55,15 @@ class APIService {
     }
   }
 
-  Future<http.Response> addChildApiCall(
-      AddChildPostData addChildPostData, String authToken) async {
+  Future<http.Response> addChildApiCall(AddChildPostData addChildPostData, String authToken) async {
     String finalUrl = '$baseUrl/child/add';
     try {
       http.MultipartRequest multipartRequest = await http.MultipartRequest(
         'POST',
         Uri.parse(finalUrl),
       );
-      multipartRequest.files.add(await http.MultipartFile.fromPath(
-          'image', addChildPostData.imagePath));
+      multipartRequest.files
+          .add(await http.MultipartFile.fromPath('image', addChildPostData.imagePath));
       multipartRequest.fields.addAll(
         {
           'name': addChildPostData.name,
@@ -81,8 +81,7 @@ class APIService {
     }
   }
 
-  Future<http.Response> setBudgetApiCall(
-      String amount, String authToken, String currencyId) async {
+  Future<http.Response> setBudgetApiCall(String amount, String authToken, String currencyId) async {
     String finalUrl = "$baseUrl/SetBudget";
     try {
       http.Response response = await http.post(
@@ -100,8 +99,7 @@ class APIService {
     }
   }
 
-  Future<http.Response> pullHistoryApiCall(
-      String authToken, String childId) async {
+  Future<http.Response> pullHistoryApiCall(String authToken, String childId) async {
     String finalUrl = '$baseUrl/child/pull_history';
     try {
       http.Response response = await http.post(
@@ -119,18 +117,14 @@ class APIService {
     }
   }
 
-  Future<http.Response> pullTeethApiCall(String childId, String teethNumber,
-      String pullDate, String authToken, String imagePath) async {
+  Future<http.Response> pullTeethApiCall(String childId, String teethNumber, String pullDate,
+      String authToken, String imagePath) async {
     String finalUrl = '$baseUrl/child/teeth/pull';
     try {
       http.MultipartRequest multipartRequest =
           await http.MultipartRequest('POST', Uri.parse(finalUrl));
       multipartRequest.fields.addAll(
-        {
-          'child_id': childId,
-          'teeth_number': teethNumber,
-          'pull_date': pullDate
-        },
+        {'child_id': childId, 'teeth_number': teethNumber, 'pull_date': pullDate},
       );
       multipartRequest.files.add(
         await http.MultipartFile.fromPath('picture', imagePath),
@@ -146,8 +140,8 @@ class APIService {
     }
   }
 
-  Future<http.Response> submitAns(String firstQueAns, String secondQueAns,
-      String authToken, String childId) async {
+  Future<http.Response> submitAns(
+      String firstQueAns, String secondQueAns, String authToken, String childId) async {
     String finalUrl = '$baseUrl/SubmitQuestions';
     try {
       http.Response response = await http.post(
@@ -169,15 +163,8 @@ class APIService {
     }
   }
 
-  Future<http.Response> investApiCall(
-      String authToken,
-      String childId,
-      String pullId,
-      String years,
-      String interestRate,
-      String endDate,
-      String amount,
-      String finalAmount) async {
+  Future<http.Response> investApiCall(String authToken, String childId, String pullId, String years,
+      String interestRate, String endDate, String amount, String finalAmount) async {
     String finalUrl = '$baseUrl/child/invest';
     try {
       http.Response response = await http.post(
@@ -247,8 +234,8 @@ class APIService {
     }
   }
 
-  Future<http.Response> resetPasswordApiCall(String validationCode,
-      String email, String password, String confirmPassword) async {
+  Future<http.Response> resetPasswordApiCall(
+      String validationCode, String email, String password, String confirmPassword) async {
     String finalUrl = '$baseUrl/reset';
     try {
       http.Response response = await http.post(
@@ -268,8 +255,7 @@ class APIService {
     }
   }
 
-  Future<http.Response> shareMilestoneApiCall(
-      String childId, String authToken) async {
+  Future<http.Response> shareMilestoneApiCall(String childId, String authToken) async {
     String finalUrl = '$baseUrl/MillStone';
     try {
       http.Response response = await http.post(
@@ -287,12 +273,10 @@ class APIService {
     }
   }
 
-  Future<http.Response> socialLoginApiCall(
-      SocialLoginPostData socialLoginPostData) async {
+  Future<http.Response> socialLoginApiCall(SocialLoginPostData socialLoginPostData) async {
     String finalUrl = '$baseUrl/Social';
     try {
-      http.Response response =
-          await http.post(finalUrl, body: socialLoginPostData.toJson());
+      http.Response response = await http.post(finalUrl, body: socialLoginPostData.toJson());
       print('Social Login Response : ${response.body}');
       return response;
     } catch (e) {
@@ -303,8 +287,7 @@ class APIService {
   Future<http.Response> getCurrencyApiCall(String authToken) async {
     String finalUrl = '$baseUrl/currency/get';
     try {
-      http.Response response =
-          await http.get(finalUrl, headers: {'Authorization': authToken});
+      http.Response response = await http.get(finalUrl, headers: {'Authorization': authToken});
       print('Get Currency Response : ${response.body}');
       return response;
     } catch (e) {

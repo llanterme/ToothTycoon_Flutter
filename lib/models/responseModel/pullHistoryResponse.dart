@@ -69,17 +69,17 @@ class TeethList {
 
   TeethList(
       {this.id,
-        this.childId,
-        this.teethNumber,
-        this.picture,
-        this.pullDate,
-        this.createdAt,
-        this.updatedAt});
+      this.childId,
+      this.teethNumber,
+      this.picture,
+      this.pullDate,
+      this.createdAt,
+      this.updatedAt});
 
   TeethList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    childId = json['child_id'];
-    teethNumber = json['teeth_number'];
+    childId = json['child_id'].toString();
+    teethNumber = json['teeth_number'].toString();
     picture = json['picture'];
     pullDate = json['pull_date'];
     createdAt = json['created_at'];
@@ -107,13 +107,7 @@ class Badges {
   String createdAt;
   String updatedAt;
 
-  Badges(
-      {this.id,
-        this.name,
-        this.description,
-        this.img,
-        this.createdAt,
-        this.updatedAt});
+  Badges({this.id, this.name, this.description, this.img, this.createdAt, this.updatedAt});
 
   Badges.fromJson(Map<String, dynamic> json) {
     id = json['id'];

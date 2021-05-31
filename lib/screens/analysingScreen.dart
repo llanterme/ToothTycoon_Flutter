@@ -139,8 +139,7 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
         ),
         child: LinearProgressIndicator(
           backgroundColor: AppColors.COLOR_PRIMARY,
-          valueColor:
-              AlwaysStoppedAnimation<Color>(AppColors.COLOR_LIGHT_YELLOW),
+          valueColor: AlwaysStoppedAnimation<Color>(AppColors.COLOR_LIGHT_YELLOW),
           value: _progress,
         ),
       ),
@@ -183,7 +182,7 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
 
   void _startTimer() {
     new Timer.periodic(
-      Duration(seconds: 5),
+      Duration(seconds: 2),
       (Timer timer) => setState(
         () {
           if (_progress == 1) {
@@ -193,7 +192,7 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
               analysingStatus = 'Done';
             });
           } else {
-            _progress += 0.2;
+            _progress += 0.5;
           }
         },
       ),
@@ -201,8 +200,7 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
   }
 
   Future<bool> _onBackPress() async {
-    NavigationService.instance
-        .navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
+    NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
 
     return true;
   }

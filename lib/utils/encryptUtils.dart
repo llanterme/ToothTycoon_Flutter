@@ -15,8 +15,7 @@ class EncryptUtils {
     Key key = Key.fromUtf8('o5ucjegrx74cwggosw8scg8oo4skwggJ');
     IV iv = IV.fromUtf8('h67yflxjrbscog4s');
     Encrypter encrypter = Encrypter(AES(key, mode: AESMode.cbc));
-    String decrypted =
-        encrypter.decrypt(Encrypted.fromBase64(encryptedText), iv: iv);
+    String decrypted = encrypter.decrypt(Encrypted.fromBase64(encryptedText), iv: iv);
     print('Encrypted Text : $encryptedText');
     print('Decrypted Text : $decrypted');
     return decrypted;
