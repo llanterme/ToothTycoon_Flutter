@@ -53,8 +53,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
 
   FirebaseUser _faceBookUser;
 
-  String _faceBookRedirectUrl =
-      'https://toothtycoon-41347.firebaseapp.com/__/auth/handler';
+  String _faceBookRedirectUrl = 'https://toothtycoon-41347.firebaseapp.com/__/auth/handler';
   String faceBookClientId = '860546231360514';
 
   @override
@@ -118,10 +117,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
         onFieldSubmitted: (String value) {
           Utils.fieldFocusChange(context, _emailFocusNode, _passwordFocusNode);
         },
-        style: TextStyle(
-            color: AppColors.COLOR_TEXT_BLACK,
-            fontFamily: 'Avenir',
-            fontSize: 14),
+        style: TextStyle(color: AppColors.COLOR_TEXT_BLACK, fontFamily: 'Avenir', fontSize: 14),
         decoration: InputDecoration(
           filled: true,
           fillColor: AppColors.COLOR_LIGHT_GREY,
@@ -136,10 +132,8 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
             ),
           ),
           hintText: 'Email Address',
-          hintStyle: TextStyle(
-              color: AppColors.COLOR_TEXT_BLACK,
-              fontFamily: 'Avenir',
-              fontSize: 14),
+          hintStyle:
+              TextStyle(color: AppColors.COLOR_TEXT_BLACK, fontFamily: 'Avenir', fontSize: 14),
           prefix: SizedBox(
             width: 10,
           ),
@@ -164,10 +158,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
         obscureText: !_isPasswordVisible,
         maxLines: 1,
         textInputAction: TextInputAction.done,
-        style: TextStyle(
-            color: AppColors.COLOR_TEXT_BLACK,
-            fontFamily: 'Avenir',
-            fontSize: 14),
+        style: TextStyle(color: AppColors.COLOR_TEXT_BLACK, fontFamily: 'Avenir', fontSize: 14),
         decoration: InputDecoration(
           filled: true,
           fillColor: AppColors.COLOR_LIGHT_GREY,
@@ -182,10 +173,8 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
             ),
           ),
           hintText: 'Password',
-          hintStyle: TextStyle(
-              color: AppColors.COLOR_TEXT_BLACK,
-              fontFamily: 'Avenir',
-              fontSize: 14),
+          hintStyle:
+              TextStyle(color: AppColors.COLOR_TEXT_BLACK, fontFamily: 'Avenir', fontSize: 14),
           prefix: SizedBox(
             width: 10,
           ),
@@ -196,9 +185,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
               });
             },
             icon: Image.asset(
-              _isPasswordVisible
-                  ? 'assets/icons/ic_eye_close.png'
-                  : 'assets/icons/ic_eye_open.png',
+              _isPasswordVisible ? 'assets/icons/ic_eye_close.png' : 'assets/icons/ic_eye_open.png',
               color: Colors.black,
               height: 15,
               width: 15,
@@ -363,7 +350,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
                 children: [
                   _appleIcon(),
                   Text(
-                    'Login with Apple',
+                    'Sign in with Apple',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.white,
@@ -474,8 +461,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
         );
         return false;
       } else {
-        String message =
-            Utils.validatePassword(_passwordEditController.text.trim());
+        String message = Utils.validatePassword(_passwordEditController.text.trim());
         if (message != null) {
           Utils.showAlertDialog(context, message);
           return false;
@@ -500,22 +486,18 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
       setState(() {
         _isFacebookLoading = true;
       });
-      AuthCredential facebookAuthCred =
-          FacebookAuthProvider.getCredential(accessToken: result);
-      AuthResult user =
-          await FirebaseAuth.instance.signInWithCredential(facebookAuthCred);
+      AuthCredential facebookAuthCred = FacebookAuthProvider.getCredential(accessToken: result);
+      AuthResult user = await FirebaseAuth.instance.signInWithCredential(facebookAuthCred);
       _faceBookUser = user.user;
       print(user);
       print(facebookAuthCred);
       if (_faceBookUser.email != null) {
-        _socialLogin(
-            _faceBookUser.displayName, _faceBookUser.email, result, 'facebook');
+        _socialLogin(_faceBookUser.displayName, _faceBookUser.email, result, 'facebook');
       } else {
         setState(() {
           _isFacebookLoading = false;
         });
-        Utils.showAlertDialog(
-            context, 'Email-Id dose not exists in your facebook account');
+        Utils.showAlertDialog(context, 'Email-Id dose not exists in your facebook account');
       }
     }
   }
@@ -537,8 +519,8 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
               print("successfull sign in");
               print(result.credential.user); //All the required credentials
               final AppleIdCredential appleIdCredential = result.credential;
-              _socialLogin(appleIdCredential.fullName.givenName,
-                  appleIdCredential.email, "0", 'apple');
+              _socialLogin(
+                  appleIdCredential.fullName.givenName, appleIdCredential.email, "0", 'apple');
             } catch (e) {
               print("error");
             }
@@ -594,10 +576,8 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
       await PreferenceHelper().setLoginResponse(response.body);
       await PreferenceHelper().setIsUserLogin(true);
       if (loginResponse.data.budget != null) {
-        await PreferenceHelper()
-            .setCurrencyId(loginResponse.data.budget.currencyId);
-        await PreferenceHelper()
-            .setCurrencyAmount(loginResponse.data.budget.amount);
+        await PreferenceHelper().setCurrencyId(loginResponse.data.budget.currencyId);
+        await PreferenceHelper().setCurrencyAmount(loginResponse.data.budget.amount);
       }
 
       CommonResponse.budget = loginResponse.data.budget;
@@ -606,8 +586,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
         _isLoading = false;
       });
 
-      NavigationService.instance
-          .navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
+      NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
     } else if (response.statusCode == 422) {
       message = responseData['message'];
 
@@ -643,8 +622,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
         _isForgotPasswordLoading = false;
       });
       Utils.showToast(
-          message: 'Verification Code has been sent to your email id',
-          durationInSecond: 3);
+          message: 'Verification Code has been sent to your email id', durationInSecond: 3);
       widget.resetPasswordFunction(email);
     } else {
       message = responseData['message'];
@@ -656,8 +634,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
     }
   }
 
-  void _socialLogin(String displayName, String email, String socialId,
-      String socialName) async {
+  void _socialLogin(String displayName, String email, String socialId, String socialName) async {
     List<String> deviceInfoList = await Utils.getDeviceDetails();
     String deviceId = deviceInfoList[2];
 
@@ -669,8 +646,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
     socialLoginPostData.fcmToken = 'ABCDABCDABCDABCDABCDABCD';
     socialLoginPostData.deviceId = deviceId;
 
-    Response response =
-        await _apiService.socialLoginApiCall(socialLoginPostData);
+    Response response = await _apiService.socialLoginApiCall(socialLoginPostData);
     dynamic responseData = json.decode(response.body);
     String message = responseData[Constants.KEY_MESSAGE];
 
@@ -693,8 +669,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
         }
       });
 
-      NavigationService.instance
-          .navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
+      NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
     } else if (response.statusCode == 422) {
       message = responseData['message'];
 

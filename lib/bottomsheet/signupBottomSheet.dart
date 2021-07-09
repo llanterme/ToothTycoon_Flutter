@@ -44,8 +44,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
 
   FirebaseUser _faceBookUser;
 
-  String _faceBookRedirectUrl =
-      'https://toothtycoon-41347.firebaseapp.com/__/auth/handler';
+  String _faceBookRedirectUrl = 'https://toothtycoon-41347.firebaseapp.com/__/auth/handler';
   String faceBookClientId = '860546231360514';
 
   @override
@@ -127,10 +126,8 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
             ),
           ),
           hintText: 'Email Address',
-          hintStyle: TextStyle(
-              color: AppColors.COLOR_TEXT_BLACK,
-              fontFamily: 'Avenir',
-              fontSize: 14),
+          hintStyle:
+              TextStyle(color: AppColors.COLOR_TEXT_BLACK, fontFamily: 'Avenir', fontSize: 14),
           prefix: SizedBox(
             width: 10,
           ),
@@ -188,9 +185,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
               });
             },
             icon: Image.asset(
-              _isPasswordVisible
-                  ? 'assets/icons/ic_eye_close.png'
-                  : 'assets/icons/ic_eye_open.png',
+              _isPasswordVisible ? 'assets/icons/ic_eye_close.png' : 'assets/icons/ic_eye_open.png',
               color: Colors.black,
               height: 15,
               width: 15,
@@ -418,8 +413,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
       );
       return false;
     } else {
-      String message =
-          Utils.validatePassword(_passwordEditController.text.trim());
+      String message = Utils.validatePassword(_passwordEditController.text.trim());
       if (message != null) {
         Utils.showAlertDialog(context, message);
         return false;
@@ -444,22 +438,18 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
         _isFacebookLoading = true;
       });
 
-      AuthCredential facebookAuthCred =
-          FacebookAuthProvider.getCredential(accessToken: result);
-      AuthResult user =
-          await FirebaseAuth.instance.signInWithCredential(facebookAuthCred);
+      AuthCredential facebookAuthCred = FacebookAuthProvider.getCredential(accessToken: result);
+      AuthResult user = await FirebaseAuth.instance.signInWithCredential(facebookAuthCred);
       _faceBookUser = user.user;
       print(user);
       print(facebookAuthCred);
       if (_faceBookUser.email != null) {
-        _socialLogin(
-            _faceBookUser.displayName, _faceBookUser.email, result, 'facebook');
+        _socialLogin(_faceBookUser.displayName, _faceBookUser.email, result, 'facebook');
       } else {
         setState(() {
           _isFacebookLoading = false;
         });
-        Utils.showAlertDialog(
-            context, 'Email-Id dose not exists in your facebook account');
+        Utils.showAlertDialog(context, 'Email-Id dose not exists in your facebook account');
       }
     }
   }
@@ -481,8 +471,8 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
               print("successfull sign in");
               print(result.credential.user); //All the required credentials
               final AppleIdCredential appleIdCredential = result.credential;
-              _socialLogin(appleIdCredential.fullName.givenName,
-                  appleIdCredential.email, "01", 'apple');
+              _socialLogin(
+                  appleIdCredential.fullName.givenName, appleIdCredential.email, "01", 'apple');
             } catch (e) {
               print("error");
             }
@@ -537,8 +527,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
         _isLoading = false;
       });
 
-      NavigationService.instance
-          .navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
+      NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
     } else if (response.statusCode == 422) {
       message = responseData['message'];
       setState(() {
@@ -555,8 +544,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
     }
   }
 
-  void _socialLogin(String displayName, String email, String socialId,
-      String socialName) async {
+  void _socialLogin(String displayName, String email, String socialId, String socialName) async {
     List<String> deviceInfoList = await Utils.getDeviceDetails();
     String deviceId = deviceInfoList[2];
 
@@ -568,8 +556,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
     socialLoginPostData.fcmToken = 'ABCDABCDABCDABCDABCDABCD';
     socialLoginPostData.deviceId = deviceId;
 
-    Response response =
-        await _apiService.socialLoginApiCall(socialLoginPostData);
+    Response response = await _apiService.socialLoginApiCall(socialLoginPostData);
     dynamic responseData = json.decode(response.body);
     String message = responseData[Constants.KEY_MESSAGE];
 
@@ -590,8 +577,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
         }
       });
 
-      NavigationService.instance
-          .navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
+      NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
     } else if (response.statusCode == 422) {
       message = responseData['message'];
 

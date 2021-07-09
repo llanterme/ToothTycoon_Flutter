@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:tooth_tycoon/bottomsheet/loginBottomSheet.dart';
 import 'package:tooth_tycoon/bottomsheet/resetPasswordBottomSheet.dart';
 import 'package:tooth_tycoon/bottomsheet/signupBottomSheet.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
+import 'package:tooth_tycoon/helper/add_helper.dart';
+
 import 'package:tooth_tycoon/widgets/videoPlayerWidget.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -20,26 +23,121 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   double ratio = 832 / 726;
 
+  BannerAd _bannerAd;
+  bool _isBannerAdReady = false;
+
+  InterstitialAd _interstitialAd;
+  bool _isInterstitialAdReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bannerAd = BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          _isBannerAdReady = false;
+          ad.dispose();
+        },
+      ),
+    );
+
+    _bannerAd.load();
+
+    _loadInterstitialAd();
+  }
+
+  @override
+  void dispose() {
+    _interstitialAd?.dispose();
+
+    super.dispose();
+  }
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          this._interstitialAd = ad;
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              print("add dissmess");
+            },
+          );
+
+          _isInterstitialAdReady = true;
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load an interstitial ad: ${err.message}');
+          _isInterstitialAdReady = false;
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.COLOR_PRIMARY,
-      body: SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              _appIconWidget(),
-              _slider(),
-              _pageIndicator(),
-              _signupBtn(),
-              _loginBtn(),
-            ],
-          ),
-        ),
-      ),
+      body: FutureBuilder<void>(
+          future: _initGoogleMobileAds(),
+          builder: (context, snapshot) {
+            return SafeArea(
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    _appIconWidget(),
+                    _slider(),
+                    _pageIndicator(),
+                    _signupBtn(),
+                    _loginBtn(),
+                    const SizedBox(height: 20),
+                    if (_isBannerAdReady)
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          width: _bannerAd.size.width.toDouble(),
+                          height: _bannerAd.size.height.toDouble(),
+                          child: AdWidget(ad: _bannerAd),
+                        ),
+                      ),
+                    ButtonTheme(
+                        padding: EdgeInsets.symmetric(horizontal: 15.0),
+                        minWidth: 300.0,
+                        height: 50,
+                        child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.amber)),
+                          padding: const EdgeInsets.all(0.0),
+                          child: Text(
+                            'PURCHASE ACCESS',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            if (_isInterstitialAdReady) _interstitialAd?.show();
+                          },
+                        )),
+                  ],
+                ),
+              ),
+            );
+          }),
     );
   }
 
@@ -267,8 +365,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: SignupBottomSheet(
           loginFunction: _openLoginBottomSheet,
         ),
@@ -286,8 +383,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: LoginBottomSheet(
           signupFunction: _openSignupBottomSheet,
           resetPasswordFunction: _openResetPasswordBottomSheet,
@@ -307,13 +403,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: ResetPasswordBottomSheet(
           email: email,
           loginFunction: _openLoginBottomSheet,
         ),
       ),
     );
+  }
+
+  Future<InitializationStatus> _initGoogleMobileAds() {
+    // TODO: Initialize Google Mobile Ads SDK
+    return MobileAds.instance.initialize();
   }
 }

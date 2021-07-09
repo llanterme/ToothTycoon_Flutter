@@ -45,6 +45,8 @@ dependencies:
   esys_flutter_share: ^1.0.2
   synchronized: 2.1.0+1
   draggable_scrollbar: ^0.0.4
+  google_mobile_ads: ^0.13.0
+  
 
 dev_dependencies:
   flutter_test:
