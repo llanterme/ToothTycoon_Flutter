@@ -511,10 +511,11 @@ class _HomeScreenState extends State<HomeScreen> {
         LoginResponse loginResponse = LoginResponse.fromJson(responseData);
         CommonResponse.budget = loginResponse.data.budget;
       }
-
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     } else {
       setState(() {
         _isLoading = false;

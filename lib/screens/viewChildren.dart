@@ -147,9 +147,7 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
       height: MediaQuery.of(context).size.height * 0.80,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
-          itemCount: _childList != null && _childList.isNotEmpty
-              ? _childList.length
-              : 0,
+          itemCount: _childList != null && _childList.isNotEmpty ? _childList.length : 0,
           itemBuilder: (BuildContext context, int index) {
             return _childCell(_childList[index]);
           }),
@@ -174,7 +172,9 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
           },
           leading: CircleAvatar(
             radius: 24,
-            backgroundImage: NetworkImage(childData.img),
+            backgroundImage: childData.img.endsWith("default.jpg")
+                ? AssetImage("assets/images/default.jpeg")
+                : NetworkImage(childData.img),
           ),
           title: Text(
             childData.name,
@@ -301,8 +301,7 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
   }
 
   Future<bool> _onBackPress() async {
-    NavigationService.instance
-        .navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
+    NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
 
     return true;
   }
@@ -316,8 +315,7 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: AddChildBottomSheet(
           refreshPage: _getChildList,
         ),
@@ -341,8 +339,7 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
       var dataList = responseData[Constants.KEY_DATA];
 
       if (dataList != null && dataList.isNotEmpty) {
-        ChildListResponse childListResponse =
-            ChildListResponse.fromJson(responseData);
+        ChildListResponse childListResponse = ChildListResponse.fromJson(responseData);
         setState(() {
           _childList = childListResponse.data;
           if (_childList != null && _childList.isNotEmpty) {
