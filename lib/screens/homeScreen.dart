@@ -483,7 +483,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Response response = await _apiService.getCurrencyApiCall(authToken);
     var responseData = json.decode(response.body);
-    int statusCode = responseData[Constants.KEY_STATUS_CODE];
     String message = responseData[Constants.KEY_MESSAGE];
 
     if (response.statusCode == Constants.VAL_RESPONSE_STATUS_OK) {

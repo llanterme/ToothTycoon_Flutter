@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
 import 'package:tooth_tycoon/helper/prefrenceHelper.dart';
@@ -25,8 +26,19 @@ import 'package:tooth_tycoon/screens/viewChildren.dart';
 import 'package:tooth_tycoon/screens/welcomeScreen.dart';
 import 'package:tooth_tycoon/services/navigation_service.dart';
 
-// @dart=2.9
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await MobileAds.instance.initialize().then((InitializationStatus status) {
+    print('Initialization done: ${status.adapterStatuses}');
+    MobileAds.instance.updateRequestConfiguration(
+      RequestConfiguration(
+          tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified,
+          testDeviceIds: <String>[
+            "E10DACBE0193B8F6148C02DE3376FFBC"
+          ]), //when you run first time you will get your test id in logs then update it here <String>["test id"]
+    );
+  });
+
   runApp(MyApp());
 }
 

@@ -23,72 +23,59 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   double ratio = 832 / 726;
 
-  BannerAd _bannerAd;
-  bool _isBannerAdReady = false;
-
-  InterstitialAd _interstitialAd;
-  bool _isInterstitialAdReady = false;
-
   @override
   void initState() {
     super.initState();
-
-    _bannerAd = BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        onAdLoaded: (_) {
-          setState(() {
-            _isBannerAdReady = true;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
-          _isBannerAdReady = false;
-          ad.dispose();
-        },
-      ),
-    );
-
-    _bannerAd.load();
-
-    _loadInterstitialAd();
   }
 
   @override
   void dispose() {
-    _interstitialAd?.dispose();
-
+    _anchoredBanner?.dispose();
     super.dispose();
   }
 
-  void _loadInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: AdHelper.interstitialAdUnitId,
+  BannerAd _anchoredBanner;
+  bool _loadingAnchoredBanner = false;
+
+  Future<void> _createAnchoredBanner(BuildContext context) async {
+    final AnchoredAdaptiveBannerAdSize size = await AdSize.getAnchoredAdaptiveBannerAdSize(
+      Orientation.portrait,
+      MediaQuery.of(context).size.width.truncate(),
+    );
+
+    if (size == null) {
+      print('Unable to get height of anchored banner.');
+      return;
+    }
+
+    final BannerAd banner = BannerAd(
+      size: size,
       request: AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) {
-          this._interstitialAd = ad;
-
-          ad.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (ad) {
-              print("add dissmess");
-            },
-          );
-
-          _isInterstitialAdReady = true;
+      adUnitId: AdHelper.bannerAdUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('$BannerAd loaded.');
+          setState(() {
+            _anchoredBanner = ad as BannerAd;
+          });
         },
-        onAdFailedToLoad: (err) {
-          print('Failed to load an interstitial ad: ${err.message}');
-          _isInterstitialAdReady = false;
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('$BannerAd failedToLoad: $error');
+          ad.dispose();
         },
+        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
+        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
       ),
     );
+    return banner.load();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_loadingAnchoredBanner) {
+      _loadingAnchoredBanner = true;
+      _createAnchoredBanner(context);
+    }
     return Scaffold(
       backgroundColor: AppColors.COLOR_PRIMARY,
       body: FutureBuilder<void>(
@@ -107,32 +94,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     _signupBtn(),
                     _loginBtn(),
                     const SizedBox(height: 20),
-                    if (_isBannerAdReady)
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                          width: _bannerAd.size.width.toDouble(),
-                          height: _bannerAd.size.height.toDouble(),
-                          child: AdWidget(ad: _bannerAd),
-                        ),
+                    if (_anchoredBanner != null)
+                      Container(
+                        color: Colors.green,
+                        width: _anchoredBanner.size.width.toDouble(),
+                        height: _anchoredBanner.size.height.toDouble(),
+                        child: AdWidget(ad: _anchoredBanner),
                       ),
-                    ButtonTheme(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        minWidth: 300.0,
-                        height: 50,
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.amber)),
-                          padding: const EdgeInsets.all(0.0),
-                          child: Text(
-                            'PURCHASE ACCESS',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () async {
-                            if (_isInterstitialAdReady) _interstitialAd?.show();
-                          },
-                        )),
                   ],
                 ),
               ),

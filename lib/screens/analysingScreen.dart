@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
+import 'package:tooth_tycoon/helper/add_helper.dart';
 import 'package:tooth_tycoon/services/navigation_service.dart';
 import 'package:tooth_tycoon/utils/commonResponse.dart';
 
@@ -20,10 +22,21 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
 
   String analysingStatus = 'Analysing';
 
+  InterstitialAd _interstitialAd;
+  bool _isInterstitialAdReady = false;
+
   @override
   void initState() {
+    _loadInterstitialAd();
     _startTimer();
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _interstitialAd.dispose();
+    super.dispose();
   }
 
   @override
@@ -146,15 +159,43 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
     );
   }
 
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          this._interstitialAd = ad;
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              NavigationService.instance
+                  .navigateToReplacementNamed(Constants.KEY_ROUTE_CONGRATULATIONS_ON_TOOTH_PULL);
+            },
+          );
+
+          _isInterstitialAdReady = true;
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load an interstitial ad: ${err.message}');
+          _isInterstitialAdReady = false;
+        },
+      ),
+    );
+  }
+
   Widget _toothBtn() {
     return Opacity(
       opacity: !_isToothBtnEnable ? 0.7 : 1.0,
       child: InkWell(
-        onTap: () => _isToothBtnEnable
-            ? NavigationService.instance.navigateToReplacementNamed(
-                Constants.KEY_ROUTE_CONGRATULATIONS_ON_TOOTH_PULL,
-              )
-            : null,
+        onTap: () {
+          if (_isToothBtnEnable && _isInterstitialAdReady) {
+            _interstitialAd?.show();
+          } else {
+            NavigationService.instance
+                .navigateToReplacementNamed(Constants.KEY_ROUTE_CONGRATULATIONS_ON_TOOTH_PULL);
+          }
+        },
         child: Container(
           height: 50,
           width: MediaQuery.of(context).size.width,

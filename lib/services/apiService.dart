@@ -1,4 +1,8 @@
+import 'dart:convert' as JSON;
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 import 'package:tooth_tycoon/models/postdataModel/addChildPostDataModel.dart';
 import 'package:tooth_tycoon/models/postdataModel/loginPostDataModel.dart';
@@ -9,6 +13,35 @@ class APIService {
   // final String baseUrl = 'http://tooth.orainfotech.com/api'; // Live
   final String baseUrl = 'http://ec2-3-141-107-40.us-east-2.compute.amazonaws.com/api'; // Luke
   Map<String, dynamic> header = {'Accept': "application/json"};
+
+  dynamic getFacebookProfileDetails(FacebookAccessToken token) async {
+    var userProfile;
+
+    try {
+      final graphResponse = await http.get(
+          'https://graph.facebook.com/v2.12/me?fields=email,name,picture.width(800).height(800)&access_token=${token.token}');
+      userProfile = JSON.jsonDecode(graphResponse.body);
+
+      return userProfile;
+    } on SocketException catch (e) {
+      // throw json.encode(_buildErrorResponse(e, "Connection Error"));
+    } on Exception catch (e) {
+      //throw json.encode(_buildErrorResponse(e, "Timeout Error"));
+    }
+  }
+
+  Future<FacebookAccessToken> getFacebookToken() async {
+    try {
+      FacebookLogin _facebookLogin = FacebookLogin();
+      final facebookLoginResult = await _facebookLogin.currentAccessToken;
+
+      return facebookLoginResult;
+    } on SocketException catch (e) {
+      return null;
+    } on Exception catch (e) {
+      return null;
+    }
+  }
 
   Future<http.Response> loginApiCall(LoginPostData loginPostData) async {
     String finalUrl = '$baseUrl/login';

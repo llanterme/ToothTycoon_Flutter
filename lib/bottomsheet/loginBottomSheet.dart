@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
@@ -51,7 +52,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
   bool _isFacebookLoading = false;
   bool _isAppleLoading = false;
 
-  FirebaseUser _faceBookUser;
+  UserCredential _faceBookUser;
 
   String _faceBookRedirectUrl = 'https://toothtycoon-41347.firebaseapp.com/__/auth/handler';
   String faceBookClientId = '860546231360514';
@@ -473,32 +474,37 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
   }
 
   void _faceBookSignIn() async {
-    String result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => CustomWebView(
-                selectedUrl:
-                    'https://www.facebook.com/dialog/oauth?client_id=$faceBookClientId&redirect_uri=$_faceBookRedirectUrl&response_type=token&scope=email,public_profile,',
-              ),
-          maintainState: true),
-    );
-    if (result != null) {
-      setState(() {
-        _isFacebookLoading = true;
-      });
-      AuthCredential facebookAuthCred = FacebookAuthProvider.getCredential(accessToken: result);
-      AuthResult user = await FirebaseAuth.instance.signInWithCredential(facebookAuthCred);
-      _faceBookUser = user.user;
-      print(user);
-      print(facebookAuthCred);
-      if (_faceBookUser.email != null) {
-        _socialLogin(_faceBookUser.displayName, _faceBookUser.email, result, 'facebook');
-      } else {
+    final facebookLogin = FacebookLogin();
+
+    FacebookLoginResult facebookLoginResult = await facebookLogin.logIn(['email']);
+    dynamic userProfile;
+    switch (facebookLoginResult.status) {
+      case FacebookLoginStatus.loggedIn:
+        FacebookAccessToken foo = await _apiService.getFacebookToken();
+        userProfile = await _apiService.getFacebookProfileDetails(foo);
+
+        break;
+      case FacebookLoginStatus.cancelledByUser:
         setState(() {
           _isFacebookLoading = false;
+          Utils.showAlertDialog(context, 'You cancelled the login request.');
         });
-        Utils.showAlertDialog(context, 'Email-Id dose not exists in your facebook account');
-      }
+        break;
+      case FacebookLoginStatus.error:
+        setState(() {
+          _isFacebookLoading = false;
+          Utils.showAlertDialog(context, 'and error has occured. Please try again!');
+        });
+        break;
+    }
+
+    if (userProfile["email"] != null) {
+      _socialLogin(userProfile["name"], userProfile["email"], userProfile["id"], 'facebook');
+    } else {
+      setState(() {
+        _isFacebookLoading = false;
+      });
+      Utils.showAlertDialog(context, 'Email-Id dose not exists in your facebook account');
     }
   }
 

@@ -38,13 +38,7 @@ class SplashScreen extends StatelessWidget {
     if (_isUserLogin) {
       NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
     } else {
-      //  print('Device Width : ${MediaQuery.of(_buildContext).size.width}');
-      // if (MediaQuery.of(_buildContext).size.width <= 350) {
-      //   NavigationService.instance
-      //       .navigateToReplacementNamed(Constants.KEY_DEVICE_NOT_SUPPORTED_SCREEN);
-      // } else {
       NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_WELCOME);
-      // }
     }
   }
 }
