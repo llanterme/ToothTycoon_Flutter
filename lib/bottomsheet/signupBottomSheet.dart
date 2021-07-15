@@ -431,31 +431,20 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
     dynamic userProfile;
     switch (facebookLoginResult.status) {
       case FacebookLoginStatus.loggedIn:
-        FacebookAccessToken foo = await _apiService.getFacebookToken();
-        userProfile = await _apiService.getFacebookProfileDetails(foo);
-
+        FacebookAccessToken refreshedToken = await _apiService.getFacebookToken();
+        userProfile = await _apiService.getFacebookProfileDetails(refreshedToken);
+        _socialLogin(userProfile["name"], userProfile["email"], userProfile["id"], 'facebook');
+        _isFacebookLoading = false;
         break;
       case FacebookLoginStatus.cancelledByUser:
-        setState(() {
-          _isFacebookLoading = false;
-          Utils.showAlertDialog(context, 'You cancelled the login request.');
-        });
+        _isFacebookLoading = false;
+        Utils.showAlertDialog(context, 'You cancelled the login request.');
+
         break;
       case FacebookLoginStatus.error:
-        setState(() {
-          _isFacebookLoading = false;
-          Utils.showAlertDialog(context, 'and error has occured. Please try again!');
-        });
-        break;
-    }
-
-    if (userProfile["email"] != null) {
-      _socialLogin(userProfile["name"], userProfile["email"], userProfile["id"], 'facebook');
-    } else {
-      setState(() {
         _isFacebookLoading = false;
-      });
-      Utils.showAlertDialog(context, 'Email-Id dose not exists in your facebook account');
+        Utils.showAlertDialog(context, 'An error has occured. Please try again!');
+        break;
     }
   }
 

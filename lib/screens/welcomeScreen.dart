@@ -39,7 +39,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<void> _createAnchoredBanner(BuildContext context) async {
     final AnchoredAdaptiveBannerAdSize size = await AdSize.getAnchoredAdaptiveBannerAdSize(
-      Orientation.portrait,
+      Orientation.landscape,
       MediaQuery.of(context).size.width.truncate(),
     );
 
@@ -77,36 +77,31 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       _createAnchoredBanner(context);
     }
     return Scaffold(
-      backgroundColor: AppColors.COLOR_PRIMARY,
-      body: FutureBuilder<void>(
-          future: _initGoogleMobileAds(),
-          builder: (context, snapshot) {
-            return SafeArea(
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    _appIconWidget(),
-                    _slider(),
-                    _pageIndicator(),
-                    _signupBtn(),
-                    _loginBtn(),
-                    const SizedBox(height: 20),
-                    if (_anchoredBanner != null)
-                      Container(
-                        color: Colors.green,
-                        width: _anchoredBanner.size.width.toDouble(),
-                        height: _anchoredBanner.size.height.toDouble(),
-                        child: AdWidget(ad: _anchoredBanner),
-                      ),
-                  ],
-                ),
-              ),
-            );
-          }),
-    );
+        backgroundColor: AppColors.COLOR_PRIMARY,
+        body: SafeArea(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                _appIconWidget(),
+                _slider(),
+                _pageIndicator(),
+                _signupBtn(),
+                _loginBtn(),
+                const SizedBox(height: 20),
+                if (_anchoredBanner != null)
+                  Container(
+                    color: Colors.green,
+                    width: _anchoredBanner.size.width.toDouble(),
+                    height: _anchoredBanner.size.height.toDouble(),
+                    child: AdWidget(ad: _anchoredBanner),
+                  ),
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget _appIconWidget() {
@@ -378,10 +373,5 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ),
     );
-  }
-
-  Future<InitializationStatus> _initGoogleMobileAds() {
-    // TODO: Initialize Google Mobile Ads SDK
-    return MobileAds.instance.initialize();
   }
 }

@@ -38,6 +38,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
 
   TextEditingController _nameEditController = TextEditingController();
 
+  PickedFile _imageFile;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -125,10 +127,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
         inputFormatters: [
           new WhitelistingTextInputFormatter(RegExp("[a-zA-Z]")),
         ],
-        style: TextStyle(
-            color: AppColors.COLOR_TEXT_BLACK,
-            fontFamily: 'Avenir',
-            fontSize: 14),
+        style: TextStyle(color: AppColors.COLOR_TEXT_BLACK, fontFamily: 'Avenir', fontSize: 14),
         decoration: InputDecoration(
           filled: true,
           fillColor: AppColors.COLOR_LIGHT_GREY,
@@ -143,10 +142,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
             ),
           ),
           hintText: 'Name',
-          hintStyle: TextStyle(
-              color: AppColors.COLOR_TEXT_BLACK,
-              fontFamily: 'Avenir',
-              fontSize: 14),
+          hintStyle:
+              TextStyle(color: AppColors.COLOR_TEXT_BLACK, fontFamily: 'Avenir', fontSize: 14),
           prefix: SizedBox(
             width: 10,
           ),
@@ -189,10 +186,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                   ? 'Date of Birth'
                   : '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
               textAlign: TextAlign.left,
-              style: TextStyle(
-                  color: AppColors.COLOR_TEXT_BLACK,
-                  fontFamily: 'Avenir',
-                  fontSize: 14),
+              style:
+                  TextStyle(color: AppColors.COLOR_TEXT_BLACK, fontFamily: 'Avenir', fontSize: 14),
             ),
           ],
         ),
@@ -362,19 +357,22 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
 
   void _pickImageFromGallery() async {
     Navigator.pop(context);
-    PickedFile _imageFile = await ImagePicker()
-        .getImage(source: ImageSource.gallery, imageQuality: 50);
+    _imageFile = await ImagePicker().getImage(source: ImageSource.gallery, imageQuality: 50);
     setState(() {
-      _selImageFile = File(_imageFile.path);
+      if (_imageFile != null) {
+        _selImageFile = File(_imageFile.path);
+      }
     });
   }
 
   void _pickImageFromCamera() async {
     Navigator.pop(context);
-    PickedFile _imageFile = await ImagePicker()
-        .getImage(source: ImageSource.camera, imageQuality: 50);
+    PickedFile _imageFile =
+        await ImagePicker().getImage(source: ImageSource.camera, imageQuality: 50);
     setState(() {
-      _selImageFile = File(_imageFile.path);
+      if (_imageFile != null) {
+        _selImageFile = File(_imageFile.path);
+      }
     });
   }
 
@@ -428,8 +426,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
     String authToken = 'Bearer $token';
 
     String name = _nameEditController.text.trim();
-    String dateOfBirth =
-        '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}';
+    String dateOfBirth = '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}';
     String imagePath = _selImageFile.path;
 
     AddChildPostData addChildPostData = AddChildPostData();
@@ -437,8 +434,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
     addChildPostData.dateOfBirth = dateOfBirth;
     addChildPostData.imagePath = imagePath;
 
-    Response response =
-        await _apiService.addChildApiCall(addChildPostData, authToken);
+    Response response = await _apiService.addChildApiCall(addChildPostData, authToken);
     dynamic responseData = json.decode(response.body);
     String message = responseData[Constants.KEY_MESSAGE];
 

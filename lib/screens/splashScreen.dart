@@ -7,11 +7,8 @@ import 'package:tooth_tycoon/helper/prefrenceHelper.dart';
 import 'package:tooth_tycoon/services/navigation_service.dart';
 
 class SplashScreen extends StatelessWidget {
-  BuildContext _buildContext;
-
   @override
   Widget build(BuildContext context) {
-    _buildContext = context;
     _startTime();
     return Scaffold(
       body: Container(

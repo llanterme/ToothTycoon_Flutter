@@ -32,10 +32,8 @@ void main() async {
     print('Initialization done: ${status.adapterStatuses}');
     MobileAds.instance.updateRequestConfiguration(
       RequestConfiguration(
-          tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified,
-          testDeviceIds: <String>[
-            "E10DACBE0193B8F6148C02DE3376FFBC"
-          ]), //when you run first time you will get your test id in logs then update it here <String>["test id"]
+        tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified,
+      ),
     );
   });
 

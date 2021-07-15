@@ -480,31 +480,20 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
     dynamic userProfile;
     switch (facebookLoginResult.status) {
       case FacebookLoginStatus.loggedIn:
-        FacebookAccessToken foo = await _apiService.getFacebookToken();
-        userProfile = await _apiService.getFacebookProfileDetails(foo);
-
+        FacebookAccessToken refreshedToken = await _apiService.getFacebookToken();
+        userProfile = await _apiService.getFacebookProfileDetails(refreshedToken);
+        _socialLogin(userProfile["name"], userProfile["email"], userProfile["id"], 'facebook');
+        _isFacebookLoading = false;
         break;
       case FacebookLoginStatus.cancelledByUser:
-        setState(() {
-          _isFacebookLoading = false;
-          Utils.showAlertDialog(context, 'You cancelled the login request.');
-        });
+        _isFacebookLoading = false;
+        Utils.showAlertDialog(context, 'You cancelled the login request.');
+
         break;
       case FacebookLoginStatus.error:
-        setState(() {
-          _isFacebookLoading = false;
-          Utils.showAlertDialog(context, 'and error has occured. Please try again!');
-        });
-        break;
-    }
-
-    if (userProfile["email"] != null) {
-      _socialLogin(userProfile["name"], userProfile["email"], userProfile["id"], 'facebook');
-    } else {
-      setState(() {
         _isFacebookLoading = false;
-      });
-      Utils.showAlertDialog(context, 'Email-Id dose not exists in your facebook account');
+        Utils.showAlertDialog(context, 'An error has occured. Please try again!');
+        break;
     }
   }
 
@@ -522,11 +511,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
         switch (result.status) {
           case AuthorizationStatus.authorized:
             try {
-              print("successfull sign in");
-              print(result.credential.user); //All the required credentials
-              final AppleIdCredential appleIdCredential = result.credential;
-              _socialLogin(
-                  appleIdCredential.fullName.givenName, appleIdCredential.email, "0", 'apple');
+              NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
             } catch (e) {
               print("error");
             }
@@ -538,6 +523,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
 
           case AuthorizationStatus.cancelled:
             print('User cancelled');
+            Utils.showToast(message: "You cancelled te request.");
             break;
         }
       } catch (error) {
