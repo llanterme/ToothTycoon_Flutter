@@ -450,7 +450,6 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
 
   void _appleSignIn() async {
     if (await AppleSignIn.isAvailable()) {
-      //Check if Apple SignIn isn available for the device or not
       try {
         final AuthorizationResult result = await AppleSignIn.performRequests([
           AppleIdRequest(requestedScopes: [
@@ -462,8 +461,6 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
         switch (result.status) {
           case AuthorizationStatus.authorized:
             try {
-              print("successfull sign in");
-              print(result.credential.user); //All the required credentials
               final AppleIdCredential appleIdCredential = result.credential;
               _socialLogin(
                   appleIdCredential.fullName.givenName, appleIdCredential.email, "01", 'apple');
@@ -478,13 +475,14 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
 
           case AuthorizationStatus.cancelled:
             print('User cancelled');
+            Utils.showToast(message: "You cancelled te request.");
             break;
         }
       } catch (error) {
         print(error);
       }
     } else {
-      print('Apple SignIn is not available for your device');
+      Utils.showToast(message: ('Apple SignIn is not available for your device'));
     }
   }
 

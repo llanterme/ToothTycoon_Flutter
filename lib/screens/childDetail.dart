@@ -179,7 +179,9 @@ class _ChildDetailState extends State<ChildDetail> {
         padding: EdgeInsets.all(2),
         child: CircleAvatar(
           radius: 24,
-          backgroundImage: NetworkImage(CommonResponse.childData.img),
+          backgroundImage: CommonResponse.childData.img.endsWith("default.jpg")
+              ? AssetImage("assets/images/default.jpeg")
+              : NetworkImage(CommonResponse.childData.img),
         ),
       ),
     );
@@ -260,8 +262,7 @@ class _ChildDetailState extends State<ChildDetail> {
   }
 
   Future<bool> _onBackPress() async {
-    NavigationService.instance
-        .navigateToReplacementNamed(Constants.KEY_ROUTE_VIEW_CHILD);
+    NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_VIEW_CHILD);
 
     return true;
   }
@@ -269,7 +270,6 @@ class _ChildDetailState extends State<ChildDetail> {
   void _logout() async {
     await PreferenceHelper().setLoginResponse(null);
     await PreferenceHelper().setIsUserLogin(false);
-    NavigationService.instance
-        .navigateToReplacementNamed(Constants.KEY_ROUTE_WELCOME);
+    NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_WELCOME);
   }
 }

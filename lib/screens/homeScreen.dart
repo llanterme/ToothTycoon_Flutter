@@ -150,17 +150,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: InkWell(
               onTap: () async {
                 _openSetBudgetBottomSheet();
-
-                // final ByteData bytes1 =
-                //     await rootBundle.load('assets/images/img_child_1.png');
-                //
-                // await Share.files(
-                //     'tooth app image',
-                //     {
-                //       'toothapp.png': bytes1.buffer.asUint8List(),
-                //     },
-                //     '*/*',
-                //     text: 'Tooth Tycoon\nhttps://google.co.in');
               },
               child: Container(
                 width: MediaQuery.of(context).size.width,

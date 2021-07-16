@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
+import 'package:tooth_tycoon/helper/add_helper.dart';
 import 'package:tooth_tycoon/helper/prefrenceHelper.dart';
 import 'package:tooth_tycoon/models/responseModel/currencyResponse.dart';
 import 'package:tooth_tycoon/models/responseModel/loginResponseModel.dart';
@@ -29,19 +31,49 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
 
   String _selCurrency = '';
 
+  InterstitialAd _interstitialAd;
+  bool _isInterstitialAdReady = false;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          this._interstitialAd = ad;
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {},
+          );
+
+          _isInterstitialAdReady = true;
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load an interstitial ad: ${err.message}');
+          _isInterstitialAdReady = false;
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _interstitialAd.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
+    _loadInterstitialAd();
     _currencyList = CommonResponse.currencyResponse.data;
     setState(() {
       if (_currencyList != null && _currencyList.isNotEmpty) {
         for (CurrencyData currencyData in _currencyList) {
           if (CommonResponse.budget != null) {
-            if (int.parse(CommonResponse.budget.currencyId) ==
-                currencyData.id) {
+            if (int.parse(CommonResponse.budget.currencyId) == currencyData.id) {
               _selCurrencyData = currencyData;
               _selCurrency = _selCurrencyData.symbol;
-              amountCounter =
-                  double.parse(CommonResponse.budget.amount).toInt();
+              amountCounter = double.parse(CommonResponse.budget.amount).toInt();
             }
           } else {
             if (currencyData.code == 'USD') {
@@ -189,9 +221,7 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
       child: ListView.builder(
-        itemCount: _currencyList != null && _currencyList.isNotEmpty
-            ? _currencyList.length
-            : 0,
+        itemCount: _currencyList != null && _currencyList.isNotEmpty ? _currencyList.length : 0,
         itemBuilder: (BuildContext context, int index) {
           return _currencyWidget(_currencyList[index]);
         },
@@ -329,6 +359,9 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
   }
 
   void _submit() async {
+    if (_isInterstitialAdReady) {
+      _interstitialAd?.show();
+    }
     setState(() {
       _isLoading = true;
     });
@@ -337,8 +370,8 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
     String authToken = 'Bearer $token';
     String amount = amountCounter.toString();
 
-    Response response = await _apiService.setBudgetApiCall(
-        amount, authToken, _selCurrencyData.id.toString());
+    Response response =
+        await _apiService.setBudgetApiCall(amount, authToken, _selCurrencyData.id.toString());
     dynamic responseData = json.decode(response.body);
     String message = responseData[Constants.KEY_MESSAGE];
 

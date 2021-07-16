@@ -499,7 +499,6 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
 
   void _appleSignIn() async {
     if (await AppleSignIn.isAvailable()) {
-      //Check if Apple SignIn isn available for the device or not
       try {
         final AuthorizationResult result = await AppleSignIn.performRequests([
           AppleIdRequest(requestedScopes: [
