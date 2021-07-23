@@ -10,7 +10,7 @@ import 'package:tooth_tycoon/models/postdataModel/signupPostDataModel.dart';
 import 'package:tooth_tycoon/models/postdataModel/socialLoginPostData.dart';
 
 class APIService {
-  // final String baseUrl = 'http://tooth.orainfotech.com/api'; // Live
+  // final String baseUrl = 'http://127.0.0.1:8000/api'; // Live
   final String baseUrl = 'http://ec2-3-141-107-40.us-east-2.compute.amazonaws.com/api'; // Luke
   Map<String, dynamic> header = {'Accept': "application/json"};
 
@@ -60,6 +60,7 @@ class APIService {
 
   Future<http.Response> signupApiCall(SignupPostData signupPostData) async {
     String finalUrl = '$baseUrl/register';
+    print('Signup Request : ${signupPostData.toJson()}');
     try {
       http.Response response = await http.post(
         finalUrl,
@@ -308,6 +309,7 @@ class APIService {
 
   Future<http.Response> socialLoginApiCall(SocialLoginPostData socialLoginPostData) async {
     String finalUrl = '$baseUrl/Social';
+    print('Social Login Request : ${socialLoginPostData.toJson()}');
     try {
       http.Response response = await http.post(finalUrl, body: socialLoginPostData.toJson());
       print('Social Login Response : ${response.body}');

@@ -484,6 +484,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
         userProfile = await _apiService.getFacebookProfileDetails(refreshedToken);
         _socialLogin(userProfile["name"], userProfile["email"], userProfile["id"], 'facebook');
         _isFacebookLoading = false;
+
         break;
       case FacebookLoginStatus.cancelledByUser:
         _isFacebookLoading = false;

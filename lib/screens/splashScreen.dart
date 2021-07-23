@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
 import 'package:tooth_tycoon/helper/prefrenceHelper.dart';
@@ -31,6 +32,7 @@ class SplashScreen extends StatelessWidget {
   }
 
   void _navigatePage() async {
+    SharedPreferences.setMockInitialValues({});
     bool _isUserLogin = await PreferenceHelper().getIsUserLogin() ?? false;
     if (_isUserLogin) {
       NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);

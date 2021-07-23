@@ -69,8 +69,7 @@ class Data {
     updatedAt = json['updated_at'];
     deviceId = json['device_id'];
     fcmToken = json['fcm_token'];
-    budget =
-        json['budget'] != null ? new Budget.fromJson(json['budget']) : null;
+    budget = json['budget'] != null ? new Budget.fromJson(json['budget']) : null;
     accessToken = json['accessToken'];
     if (json['tokens'] != null) {
       tokens = new List<Tokens>();
@@ -154,6 +153,7 @@ class Tokens {
 
   Tokens.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    // userId = json['user_id'].toString();
     userId = json['user_id'];
     clientId = json['client_id'];
     name = json['name'];
