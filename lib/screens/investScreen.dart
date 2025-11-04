@@ -40,8 +40,13 @@ class _InvestScreenState extends State<InvestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: SafeArea(
         child: Scaffold(
           body: Container(
@@ -58,7 +63,7 @@ class _InvestScreenState extends State<InvestScreen> {
             child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              color: AppColors.COLOR_PRIMARY.withOpacity(0.7),
+              color: AppColors.COLOR_PRIMARY.withValues(alpha: 0.7),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
@@ -386,7 +391,7 @@ class _InvestScreenState extends State<InvestScreen> {
 
   Widget _futureValueCountText() {
     return AutoSizeText(
-      '${CommonResponse.budget.symbol}${_totalAmount.toStringAsFixed(2)}',
+      '${CommonResponse.budget?.symbol ?? "\$"}${_totalAmount.toStringAsFixed(2)}',
       minFontSize: 28,
       maxFontSize: 32,
       style: TextStyle(
@@ -440,18 +445,17 @@ class _InvestScreenState extends State<InvestScreen> {
     );
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     CommonResponse.futureValue = '';
     CommonResponse.investedYear = '';
     NavigationService.instance.navigateToReplacementNamed(
         Constants.KEY_ROUTE_CONGRATULATIONS_ON_TOOTH_PULL);
 
-    return true;
-  }
+     }
 
   void _calculateTotalInterest() {
     // Old Logic
-    /*double p = double.parse(CommonResponse.pullToothData.reward);
+    /*double p = double.parse(CommonResponse.pullToothData!.reward);
 
     double r = _interestCount.toInt() / 100;
 
@@ -467,7 +471,7 @@ class _InvestScreenState extends State<InvestScreen> {
     // New Logic (Compound Interest)
 
     // P = Principal Amount
-    double p = double.parse(CommonResponse.pullToothData.reward);
+    double p = double.parse(CommonResponse.pullToothData!.reward);
     // R = Annual Interest Rate
     double r = (_interestCount / 100);
     // T = Time the Money is Invested or Borrowed for.
@@ -494,15 +498,15 @@ class _InvestScreenState extends State<InvestScreen> {
     DateTime _endDate = DateTime(year);
     DateFormat dateFormat = DateFormat('yyyy-MM-dd');
 
-    String token = await PreferenceHelper().getAccessToken();
+    String? token = await PreferenceHelper().getAccessToken();
     String authToken = '${Constants.VAL_BEARER} $token';
 
     String childId = CommonResponse.childId.toString();
-    String pullId = CommonResponse.pullToothData.id.toString();
+    String pullId = CommonResponse.pullToothData!.id.toString();
     String years = _yearCount.toInt().toString();
     String interestRate = _interestCount.toInt().toString();
     String endDate = dateFormat.format(_endDate);
-    String amount = CommonResponse.pullToothData.earn;
+    String amount = CommonResponse.pullToothData!.earn;
     String finalAmount = _totalAmount.toString();
 
     Response response = await _apiService.investApiCall(authToken, childId,

@@ -1,65 +1,65 @@
 class SubmitQuestionResponse {
-  int status;
-  String message;
-  SubmitQuestionData data;
+  late int status;
+  late String message;
+  SubmitQuestionData? data;
 
-  SubmitQuestionResponse({this.status, this.message, this.data});
+  SubmitQuestionResponse({required this.status, required this.message, this.data});
 
   SubmitQuestionResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new SubmitQuestionData.fromJson(json['data']) : null;
+    data = json['data'] != null ? SubmitQuestionData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class SubmitQuestionData {
-  Tooth tooth;
-  int count;
+  Tooth? tooth;
+  late int count;
 
-  SubmitQuestionData({this.tooth, this.count});
+  SubmitQuestionData({this.tooth, required this.count});
 
   SubmitQuestionData.fromJson(Map<String, dynamic> json) {
-    tooth = json['tooth'] != null ? new Tooth.fromJson(json['tooth']) : null;
+    tooth = json['tooth'] != null ? Tooth.fromJson(json['tooth']) : null;
     count = json['count'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.tooth != null) {
-      data['tooth'] = this.tooth.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (tooth != null) {
+      data['tooth'] = tooth!.toJson();
     }
-    data['count'] = this.count;
+    data['count'] = count;
     return data;
   }
 }
 
 class Tooth {
-  int id;
-  String question1;
-  String question2;
-  String childeId;
-  Null deletedAt;
-  String createdAt;
-  String updatedAt;
+  late int id;
+  late String question1;
+  late String question2;
+  late String childeId;
+  dynamic deletedAt;
+  late String createdAt;
+  late String updatedAt;
 
   Tooth(
-      {this.id,
-        this.question1,
-        this.question2,
-        this.childeId,
+      {required this.id,
+        required this.question1,
+        required this.question2,
+        required this.childeId,
         this.deletedAt,
-        this.createdAt,
-        this.updatedAt});
+        required this.createdAt,
+        required this.updatedAt});
 
   Tooth.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -72,14 +72,14 @@ class Tooth {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['question1'] = this.question1;
-    data['question2'] = this.question2;
-    data['childe_id'] = this.childeId;
-    data['deleted_at'] = this.deletedAt;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['question1'] = question1;
+    data['question2'] = question2;
+    data['childe_id'] = childeId;
+    data['deleted_at'] = deletedAt;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

@@ -1,51 +1,51 @@
 class ChildListResponse {
-  int status;
-  String message;
-  List<ChildData> data;
+  late int status;
+  late String message;
+  List<ChildData>? data;
 
-  ChildListResponse({this.status, this.message, this.data});
+  ChildListResponse({required this.status, required this.message, this.data});
 
   ChildListResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<ChildData>();
+      data = <ChildData>[];
       json['data'].forEach((v) {
-        data.add(new ChildData.fromJson(v));
+        data!.add(ChildData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class ChildData {
-  int id;
-  int userId;
-  String name;
-  int age;
-  String img;
-  String createdAt;
-  String updatedAt;
-  int teethCount;
+  late int id;
+  late int userId;
+  late String name;
+  late int age;
+  late String img;
+  late String createdAt;
+  late String updatedAt;
+  late int teethCount;
 
   ChildData(
-      {this.id,
-      this.userId,
-      this.name,
-      this.age,
-      this.img,
-      this.createdAt,
-      this.updatedAt,
-      this.teethCount});
+      {required this.id,
+      required this.userId,
+      required this.name,
+      required this.age,
+      required this.img,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.teethCount});
 
   ChildData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -59,15 +59,15 @@ class ChildData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['user_id'] = this.userId;
-    data['name'] = this.name;
-    data['age'] = this.age;
-    data['img'] = this.img;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['TeethCount'] = this.teethCount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['user_id'] = userId;
+    data['name'] = name;
+    data['age'] = age;
+    data['img'] = img;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['TeethCount'] = teethCount;
     return data;
   }
 }

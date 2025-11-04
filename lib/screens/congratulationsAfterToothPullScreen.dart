@@ -22,14 +22,19 @@ class _CongratulationAfterToothPullScreenState extends State<CongratulationAfter
 
   @override
   void initState() {
-    _amount = double.parse(CommonResponse.pullToothData.reward).toInt();
+    _amount = double.parse(CommonResponse.pullToothData!.reward).toInt();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
@@ -47,7 +52,7 @@ class _CongratulationAfterToothPullScreenState extends State<CongratulationAfter
             child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              color: AppColors.COLOR_PRIMARY.withOpacity(0.7),
+              color: AppColors.COLOR_PRIMARY.withValues(alpha: 0.7),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -138,7 +143,7 @@ class _CongratulationAfterToothPullScreenState extends State<CongratulationAfter
           child: Visibility(
             visible: _isShowAmount,
             child: Text(
-              '${CommonResponse.budget.symbol}$_amount',
+              '${CommonResponse.budget?.symbol ?? "\$"}$_amount',
               style: TextStyle(
                 fontSize: _amount <= 999 ? 35 : 22,
                 color: AppColors.COLOR_LIGHT_YELLOW,
@@ -256,9 +261,8 @@ class _CongratulationAfterToothPullScreenState extends State<CongratulationAfter
     );
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
 
-    return true;
-  }
+     }
 }

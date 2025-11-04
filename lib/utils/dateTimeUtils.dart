@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DateTimeUtils {
-  static String _dayString,
+  static late String _dayString,
       _monthString,
       _yearString,
       _hour24String,
@@ -11,7 +11,7 @@ class DateTimeUtils {
       _stringAmPm,
       _stringAmPmSmall;
 
-  static int _dayNumber,
+  static late int _dayNumber,
       _monthNumber,
       _yearNumber,
       _hour24Number,
@@ -19,8 +19,8 @@ class DateTimeUtils {
       _minuteNumber,
       _secondNumber;
 
-  DateTime _dateTime;
-  TimeOfDay _timeOfDay;
+  late DateTime _dateTime;
+  late TimeOfDay _timeOfDay;
 
   static final List<int> _totalDays = [
     1,
@@ -96,7 +96,7 @@ class DateTimeUtils {
     "Saturday"
   ];
 
-  DateTimeUtils({DateTime dateTime, TimeOfDay timeOfDay}) {
+  DateTimeUtils({required DateTime dateTime, required TimeOfDay timeOfDay}) {
     this._dateTime = dateTime;
     this._timeOfDay = timeOfDay;
 

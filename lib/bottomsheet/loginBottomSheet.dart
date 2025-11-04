@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:http/http.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
@@ -15,7 +15,6 @@ import 'package:tooth_tycoon/models/responseModel/loginResponseModel.dart';
 import 'package:tooth_tycoon/services/apiService.dart';
 import 'package:tooth_tycoon/services/navigation_service.dart';
 import 'package:tooth_tycoon/utils/commonResponse.dart';
-import 'package:tooth_tycoon/utils/encryptUtils.dart';
 import 'package:tooth_tycoon/utils/utils.dart';
 import 'package:tooth_tycoon/widgets/customWebView.dart';
 import 'dart:io' show Platform;
@@ -26,9 +25,9 @@ class LoginBottomSheet extends StatefulWidget {
   final Function resetPasswordFunction;
 
   LoginBottomSheet({
-    @required this.signupFunction,
-    @required this.loginFunction,
-    @required this.resetPasswordFunction,
+    required this.signupFunction,
+    required this.loginFunction,
+    required this.resetPasswordFunction,
   });
 
   @override
@@ -48,19 +47,45 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
   bool _isForgotPassword = false;
   bool _isForgotPasswordLoading = false;
   bool _isPasswordVisible = false;
+  bool _rememberMe = false;
 
   bool _isFacebookLoading = false;
   bool _isAppleLoading = false;
 
-  UserCredential _faceBookUser;
+  UserCredential? _faceBookUser;
 
-  String _faceBookRedirectUrl = 'https://toothtycoon-41347.firebaseapp.com/__/auth/handler';
+  final String _faceBookRedirectUrl = 'https://toothtycoon-41347.firebaseapp.com/__/auth/handler';
   String faceBookClientId = '860546231360514';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedCredentials();
+  }
+
+  Future<void> _loadSavedCredentials() async {
+    bool? rememberMe = await PreferenceHelper().getRememberMe();
+    print('Remember Me Status: $rememberMe');
+
+    if (rememberMe == true) {
+      String? savedEmail = await PreferenceHelper().getSavedEmail();
+      String? savedPassword = await PreferenceHelper().getSavedPassword();
+
+      print('Saved Email: $savedEmail');
+      print('Saved Password: ${savedPassword != null ? "****" : "null"}');
+
+      setState(() {
+        _rememberMe = true;
+        if (savedEmail != null) _emailEditController.text = savedEmail;
+        if (savedPassword != null) _passwordEditController.text = savedPassword;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Platform.isIOS ? 500 : 420,
+      height: Platform.isIOS ? 550 : 470,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -76,6 +101,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
           _textTitle(),
           _email(),
           _password(),
+          _rememberMeCheckbox(),
           _forgotPasswordBtn(),
           _loginBtn(),
           Spacer(),
@@ -197,10 +223,40 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
     );
   }
 
+  Widget _rememberMeCheckbox() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(left: 20, right: 30, top: 5),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Checkbox(
+            value: _rememberMe,
+            onChanged: (bool? value) {
+              setState(() {
+                _rememberMe = value ?? false;
+              });
+            },
+            activeColor: AppColors.COLOR_BTN_BLUE,
+          ),
+          Text(
+            'Remember Me',
+            style: TextStyle(
+              fontSize: 14,
+              color: AppColors.COLOR_TEXT_BLACK,
+              fontFamily: 'Avenir',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _forgotPasswordBtn() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(left: 30, right: 30, top: 10),
+      margin: EdgeInsets.only(left: 30, right: 30, top: 5),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -447,7 +503,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
       );
       return false;
     } else {
-      String message = Utils.validateEmailId(_emailEditController.text.trim());
+      String? message = Utils.validateEmailId(_emailEditController.text.trim());
       if (message != null) {
         Utils.showAlertDialog(context, message);
         return false;
@@ -462,7 +518,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
         );
         return false;
       } else {
-        String message = Utils.validatePassword(_passwordEditController.text.trim());
+        String? message = Utils.validatePassword(_passwordEditController.text.trim());
         if (message != null) {
           Utils.showAlertDialog(context, message);
           return false;
@@ -474,63 +530,58 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
   }
 
   void _faceBookSignIn() async {
-    final facebookLogin = FacebookLogin();
+    try {
+      final LoginResult result = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile'],
+      );
 
-    FacebookLoginResult facebookLoginResult = await facebookLogin.logIn(['email']);
-    dynamic userProfile;
-    switch (facebookLoginResult.status) {
-      case FacebookLoginStatus.loggedIn:
-        FacebookAccessToken refreshedToken = await _apiService.getFacebookToken();
-        userProfile = await _apiService.getFacebookProfileDetails(refreshedToken);
-        _socialLogin(userProfile["name"], userProfile["email"], userProfile["id"], 'facebook');
-        _isFacebookLoading = false;
-
-        break;
-      case FacebookLoginStatus.cancelledByUser:
+      if (result.status == LoginStatus.success) {
+        final AccessToken? accessToken = result.accessToken;
+        if (accessToken != null) {
+          final userData = await FacebookAuth.instance.getUserData();
+          _socialLogin(userData['name'], userData['email'], userData['id'], 'facebook');
+          _isFacebookLoading = false;
+        }
+      } else if (result.status == LoginStatus.cancelled) {
         _isFacebookLoading = false;
         Utils.showAlertDialog(context, 'You cancelled the login request.');
-
-        break;
-      case FacebookLoginStatus.error:
+      } else {
         _isFacebookLoading = false;
         Utils.showAlertDialog(context, 'An error has occured. Please try again!');
-        break;
+      }
+    } catch (e) {
+      _isFacebookLoading = false;
+      Utils.showAlertDialog(context, 'An error has occured. Please try again!');
     }
   }
 
   void _appleSignIn() async {
-    if (await AppleSignIn.isAvailable()) {
-      try {
-        final AuthorizationResult result = await AppleSignIn.performRequests([
-          AppleIdRequest(requestedScopes: [
-            Scope.email,
-            Scope.fullName,
-          ])
-        ]);
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
 
-        switch (result.status) {
-          case AuthorizationStatus.authorized:
-            try {
-              NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
-            } catch (e) {
-              print("error");
-            }
-            break;
-          case AuthorizationStatus.error:
-            print("Sign in failed: ${result.error.localizedDescription}");
-            Utils.showToast(message: "Something went wrong!");
-            break;
-
-          case AuthorizationStatus.cancelled:
-            print('User cancelled');
-            Utils.showToast(message: "You cancelled te request.");
-            break;
+      if (credential.identityToken != null) {
+        try {
+          NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
+        } catch (e) {
+          print("error");
         }
-      } catch (error) {
-        print(error);
       }
-    } else {
-      print('Apple SignIn is not available for your device');
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) {
+        print('User cancelled');
+        Utils.showToast(message: "You cancelled te request.");
+      } else {
+        print("Sign in failed: ${e.message}");
+        Utils.showToast(message: "Something went wrong!");
+      }
+    } catch (error) {
+      print(error);
+      Utils.showToast(message: "Something went wrong!");
     }
   }
 
@@ -541,19 +592,16 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
 
     String email = _emailEditController.text.trim();
     String password = _passwordEditController.text.trim();
-    String encryptedEmail = await EncryptUtils.encryptText(email);
-    String encryptedPassword = await EncryptUtils.encryptText(password);
-
-    print('Encrypted Password : $encryptedPassword}');
 
     List<String> deviceInfoList = await Utils.getDeviceDetails();
     String deviceId = deviceInfoList[2];
 
-    LoginPostData loginPostData = LoginPostData();
-    loginPostData.email = encryptedEmail;
-    loginPostData.password = encryptedPassword;
-    loginPostData.fcmToken = '1234567890';
-    loginPostData.deviceId = deviceId;
+    LoginPostData loginPostData = LoginPostData(
+      email: email,
+      password: password,
+      fcmToken: '1234567890',
+      deviceId: deviceId,
+    );
 
     Response response = await _apiService.loginApiCall(loginPostData);
     dynamic responseData = json.decode(response.body);
@@ -562,17 +610,31 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
     if (response.statusCode == Constants.VAL_RESPONSE_STATUS_OK) {
       LoginResponse loginResponse = LoginResponse.fromJson(responseData);
 
-      await PreferenceHelper().setAccessToken(loginResponse.data.accessToken);
-      await PreferenceHelper().setUserId(loginResponse.data.id.toString());
-      await PreferenceHelper().setEmailId(loginResponse.data.email);
+      await PreferenceHelper().setAccessToken(loginResponse.data!.accessToken);
+      await PreferenceHelper().setUserId(loginResponse.data!.id.toString());
+      await PreferenceHelper().setEmailId(loginResponse.data!.email);
       await PreferenceHelper().setLoginResponse(response.body);
       await PreferenceHelper().setIsUserLogin(true);
-      if (loginResponse.data.budget != null) {
-        await PreferenceHelper().setCurrencyId(loginResponse.data.budget.currencyId);
-        await PreferenceHelper().setCurrencyAmount(loginResponse.data.budget.amount);
+      if (loginResponse.data!.budget != null) {
+        await PreferenceHelper().setCurrencyId(loginResponse.data!.budget!.currencyId);
+        await PreferenceHelper().setCurrencyAmount(loginResponse.data!.budget!.amount);
       }
 
-      CommonResponse.budget = loginResponse.data.budget;
+      // Save credentials if Remember Me is checked
+      if (_rememberMe) {
+        print('Saving credentials - Remember Me is checked');
+        print('Saving email: $email');
+        await PreferenceHelper().setRememberMe(true);
+        await PreferenceHelper().setSavedEmail(email);
+        await PreferenceHelper().setSavedPassword(password);
+        print('Credentials saved successfully');
+      } else {
+        print('Remember Me is unchecked - clearing saved data');
+        // Clear saved credentials if Remember Me is unchecked
+        await PreferenceHelper().clearRememberMeData();
+      }
+
+      CommonResponse.budget = loginResponse.data!.budget;
 
       setState(() {
         _isLoading = false;
@@ -603,9 +665,8 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
     });
 
     String email = _emailEditController.text.trim();
-    String encryptedEmail = await EncryptUtils.encryptText(email);
 
-    Response response = await _apiService.forgotPasswordApiCall(encryptedEmail);
+    Response response = await _apiService.forgotPasswordApiCall(email);
     dynamic responseData = json.decode(response.body);
     String message = responseData[Constants.KEY_MESSAGE];
 
@@ -645,13 +706,13 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
     if (response.statusCode == Constants.VAL_RESPONSE_STATUS_USER_CREATED) {
       LoginResponse loginResponse = LoginResponse.fromJson(responseData);
 
-      await PreferenceHelper().setAccessToken(loginResponse.data.accessToken);
-      await PreferenceHelper().setUserId(loginResponse.data.id.toString());
-      await PreferenceHelper().setEmailId(loginResponse.data.email);
+      await PreferenceHelper().setAccessToken(loginResponse.data!.accessToken);
+      await PreferenceHelper().setUserId(loginResponse.data!.id.toString());
+      await PreferenceHelper().setEmailId(loginResponse.data!.email);
       await PreferenceHelper().setLoginResponse(response.body);
       await PreferenceHelper().setIsUserLogin(true);
 
-      CommonResponse.budget = loginResponse.data.budget;
+      CommonResponse.budget = loginResponse.data!.budget;
 
       setState(() {
         if (socialName == 'facebook') {

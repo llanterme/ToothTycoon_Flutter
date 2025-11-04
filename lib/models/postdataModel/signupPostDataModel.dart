@@ -1,15 +1,15 @@
 class SignupPostData {
-  String email;
-  String name;
-  String password;
-  String confirmPassword;
+  late String email;
+  late String name;
+  late String password;
+  late String confirmPassword;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = {
-      'email': this.email,
-      'name': this.name,
-      'password': this.password,
-      'password_confirmation': this.confirmPassword,
+      'email': email,
+      'name': name,
+      'password': password,
+      'password_confirmation': confirmPassword,
     };
 
     return data;

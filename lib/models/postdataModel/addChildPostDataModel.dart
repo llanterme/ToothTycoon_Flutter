@@ -1,13 +1,13 @@
 class AddChildPostData{
-  String name;
-  String dateOfBirth;
-  String imagePath;
+  late String name;
+  late String dateOfBirth;
+  late String imagePath;
 
   Map<String, String> toJson(){
     Map<String, String> data = {
-      'name' : this.name,
-      'age' : this.dateOfBirth,
-      'image' : this.imagePath,
+      'name' : name,
+      'age' : dateOfBirth,
+      'image' : imagePath,
     };
 
     return data;

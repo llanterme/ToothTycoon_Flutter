@@ -15,13 +15,16 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  PageController _pageController = PageController(initialPage: 0);
+  final PageController _pageController = PageController(initialPage: 0);
 
   final currentPage = ValueNotifier<int>(0);
 
-  String _welcomeAnimationPath = 'assets/videos/welcome_animation.mp4';
+  final String _welcomeAnimationPath = 'assets/videos/welcome_animation.mp4';
 
-  double ratio = 832 / 726;
+  final double ratio = 832 / 726;
+
+  BannerAd? _anchoredBanner;
+  bool _loadingAnchoredBanner = false;
 
   @override
   void initState() {
@@ -34,11 +37,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.dispose();
   }
 
-  BannerAd _anchoredBanner;
-  bool _loadingAnchoredBanner = false;
-
   Future<void> _createAnchoredBanner(BuildContext context) async {
-    final AnchoredAdaptiveBannerAdSize size = await AdSize.getAnchoredAdaptiveBannerAdSize(
+    final AnchoredAdaptiveBannerAdSize? size = await AdSize.getAnchoredAdaptiveBannerAdSize(
       Orientation.landscape,
       MediaQuery.of(context).size.width.truncate(),
     );
@@ -50,14 +50,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     final BannerAd banner = BannerAd(
       size: size,
-      request: AdRequest(),
+      request: const AdRequest(),
       adUnitId: AdHelper.bannerAdUnitId,
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$BannerAd loaded.');
-          setState(() {
-            _anchoredBanner = ad as BannerAd;
-          });
+          if (mounted) {
+            setState(() {
+              _anchoredBanner = ad as BannerAd;
+            });
+          }
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('$BannerAd failedToLoad: $error');
@@ -92,11 +94,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 _loginBtn(),
                 const SizedBox(height: 20),
                 if (_anchoredBanner != null)
-                  Container(
-                    color: Colors.green,
-                    width: _anchoredBanner.size.width.toDouble(),
-                    height: _anchoredBanner.size.height.toDouble(),
-                    child: AdWidget(ad: _anchoredBanner),
+                  Builder(
+                    builder: (context) {
+                      final banner = _anchoredBanner!;
+                      return Container(
+                        color: Colors.green,
+                        width: banner.size.width.toDouble(),
+                        height: banner.size.height.toDouble(),
+                        child: AdWidget(ad: banner),
+                      );
+                    },
                   ),
               ],
             ),
@@ -250,11 +257,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Widget _pageIndicator() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
       child: CirclePageIndicator(
         itemCount: 4,
         currentPageNotifier: currentPage,
-        dotColor: AppColors.COLOR_DISABLE_INDICATOR.withOpacity(0.5),
+        dotColor: AppColors.COLOR_DISABLE_INDICATOR.withValues(alpha: 0.5),
         selectedDotColor: AppColors.COLOR_ENABLE_INDICATOR,
         selectedSize: 10,
         size: 10,
@@ -323,8 +330,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       context: context,
       isScrollControlled: true,
       enableDrag: true,
-      barrierColor: Colors.black.withAlpha(1),
-      shape: RoundedRectangleBorder(
+      barrierColor: Colors.black.withValues(alpha: 0.004),
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
@@ -341,8 +348,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       context: context,
       isScrollControlled: true,
       enableDrag: true,
-      barrierColor: Colors.black.withAlpha(1),
-      shape: RoundedRectangleBorder(
+      barrierColor: Colors.black.withValues(alpha: 0.004),
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
@@ -361,8 +368,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       context: context,
       isScrollControlled: true,
       enableDrag: true,
-      barrierColor: Colors.black.withAlpha(1),
-      shape: RoundedRectangleBorder(
+      barrierColor: Colors.black.withValues(alpha: 0.004),
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(

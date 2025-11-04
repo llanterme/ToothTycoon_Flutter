@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
 import 'package:tooth_tycoon/helper/prefrenceHelper.dart';
@@ -27,16 +26,22 @@ class SplashScreen extends StatelessWidget {
   }
 
   _startTime() async {
-    var _duration = new Duration(seconds: 5);
-    return new Timer(_duration, _navigatePage);
+    var _duration = Duration(seconds: 5);
+    return Timer(_duration, _navigatePage);
   }
 
   void _navigatePage() async {
-    SharedPreferences.setMockInitialValues({});
+    // Don't clear SharedPreferences in production! This line was resetting all saved data
+    // SharedPreferences.setMockInitialValues({});  // Only for testing
+
     bool _isUserLogin = await PreferenceHelper().getIsUserLogin() ?? false;
+    print('Splash Screen - Is User Logged In: $_isUserLogin');
+
     if (_isUserLogin) {
+      print('Navigating to HOME screen');
       NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
     } else {
+      print('Navigating to WELCOME screen');
       NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_WELCOME);
     }
   }

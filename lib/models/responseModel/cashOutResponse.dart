@@ -1,44 +1,44 @@
 class CashOutResponse {
-  int status;
-  String message;
-  Data data;
+  late int status;
+  late String message;
+  Data? data;
 
-  CashOutResponse({this.status, this.message, this.data});
+  CashOutResponse({required this.status, required this.message, this.data});
 
   CashOutResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  int userId;
-  String childId;
-  String pullDetailId;
-  String amount;
-  String updatedAt;
-  String createdAt;
-  int id;
+  late int userId;
+  late String childId;
+  late String pullDetailId;
+  late String amount;
+  late String updatedAt;
+  late String createdAt;
+  late int id;
 
   Data(
-      {this.userId,
-        this.childId,
-        this.pullDetailId,
-        this.amount,
-        this.updatedAt,
-        this.createdAt,
-        this.id});
+      {required this.userId,
+        required this.childId,
+        required this.pullDetailId,
+        required this.amount,
+        required this.updatedAt,
+        required this.createdAt,
+        required this.id});
 
   Data.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'];
@@ -51,14 +51,14 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user_id'] = this.userId;
-    data['child_id'] = this.childId;
-    data['pull_detail_id'] = this.pullDetailId;
-    data['amount'] = this.amount;
-    data['updated_at'] = this.updatedAt;
-    data['created_at'] = this.createdAt;
-    data['id'] = this.id;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['user_id'] = userId;
+    data['child_id'] = childId;
+    data['pull_detail_id'] = pullDetailId;
+    data['amount'] = amount;
+    data['updated_at'] = updatedAt;
+    data['created_at'] = createdAt;
+    data['id'] = id;
     return data;
   }
 }

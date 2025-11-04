@@ -31,15 +31,20 @@ class _ChildDetailState extends State<ChildDetail> {
 
   @override
   void initState() {
-    _childName = CommonResponse.childData.name;
-    _childAge = CommonResponse.childData.age.toString();
+    _childName = CommonResponse.childData?.name ?? '';
+    _childAge = CommonResponse.childData?.age.toString() ?? '';
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: Scaffold(
         backgroundColor: AppColors.COLOR_PRIMARY,
         body: SafeArea(
@@ -179,9 +184,9 @@ class _ChildDetailState extends State<ChildDetail> {
         padding: EdgeInsets.all(2),
         child: CircleAvatar(
           radius: 24,
-          backgroundImage: CommonResponse.childData.img.endsWith("default.jpg")
-              ? AssetImage("assets/images/default.jpeg")
-              : NetworkImage(CommonResponse.childData.img),
+          backgroundImage: (CommonResponse.childData?.img ?? '').endsWith("default.jpg")
+              ? AssetImage("assets/images/default.jpeg") as ImageProvider
+              : NetworkImage(CommonResponse.childData?.img ?? ''),
         ),
       ),
     );
@@ -232,7 +237,7 @@ class _ChildDetailState extends State<ChildDetail> {
       decoration: BoxDecoration(
         color: _selScreenTag == screenTag
             ? AppColors.COLOR_LIGHT_YELLOW
-            : Colors.white.withOpacity(0.3),
+            : Colors.white.withValues(alpha: 0.3),
         borderRadius: BorderRadius.all(
           Radius.circular(30),
         ),
@@ -258,17 +263,18 @@ class _ChildDetailState extends State<ChildDetail> {
         return HistoryScreen();
       case KEY_BADGE_SCREEN:
         return BadgesScreen();
+      default:
+        return SummaryScreen();
     }
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_VIEW_CHILD);
 
-    return true;
-  }
+     }
 
   void _logout() async {
-    await PreferenceHelper().setLoginResponse(null);
+    await PreferenceHelper().setLoginResponse('');
     await PreferenceHelper().setIsUserLogin(false);
     NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_WELCOME);
   }

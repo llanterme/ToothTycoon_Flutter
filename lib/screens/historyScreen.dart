@@ -23,7 +23,7 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   APIService _apiService = APIService();
 
-  VideoPlayerController _videoPlayerController;
+  late VideoPlayerController _videoPlayerController;
 
   double ratio = 800 / 600;
 
@@ -39,15 +39,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
   String _toothName = '';
   String _collectedDate = '';
 
-  List<TeethList> _teethList;
+  List<TeethList>? _teethListList;
 
   @override
   void initState() {
     if (CommonResponse.pullHistoryData != null) {
-      _currentValue = CommonResponse.pullHistoryData.amount;
-      if (CommonResponse.pullHistoryData.teethList != null &&
-          CommonResponse.pullHistoryData.teethList.isNotEmpty) {
-        _teethList = CommonResponse.pullHistoryData.teethList;
+      _currentValue = CommonResponse.pullHistoryData!.amount;
+      if (CommonResponse.pullHistoryData!.teethList != null &&
+          CommonResponse.pullHistoryData!.teethList!.isNotEmpty) {
+        _teethListList = CommonResponse.pullHistoryData!.teethList;
         _initController('', '');
       }
     } else {
@@ -114,8 +114,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     child: Image.asset(
                       'assets/icons/ic_mouth_open.png',
                       height: MediaQuery.of(context).size.height * 0.40,
-                      width: (MediaQuery.of(context).size.height * 0.40) *
-                          ratio,
+                      width:
+                          (MediaQuery.of(context).size.height * 0.40) * ratio,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -688,7 +688,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
           ),
           Text(
-            '${CommonResponse.budget.symbol}$_currentValue',
+            '${CommonResponse.budget?.symbol ?? "\$"}$_currentValue',
             style: TextStyle(
               fontSize: 18,
               color: AppColors.COLOR_TEXT_BLACK,
@@ -781,8 +781,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void _getTeethHistory(String teethNumber) async {
     String collectedDate = '';
-    if (_teethList != null && _teethList.isNotEmpty) {
-      for (TeethList teethData in _teethList) {
+    if (_teethListList != null && _teethListList!.isNotEmpty) {
+      for (TeethList teethData in _teethListList!) {
         if (teethNumber == teethData.teethNumber) {
           collectedDate = teethData.pullDate;
           break;

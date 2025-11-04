@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +37,13 @@ class _ShareScreenState extends State<ShareScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
@@ -195,7 +201,7 @@ class _ShareScreenState extends State<ShareScreen> {
           ),
           TextSpan(
             text:
-                '${CommonResponse.budget.symbol}${CommonResponse.pullToothData.reward} ',
+                '${CommonResponse.budget?.symbol ?? "\$"}${CommonResponse.pullToothData!.reward} ',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -221,7 +227,7 @@ class _ShareScreenState extends State<ShareScreen> {
           ),
           TextSpan(
             text:
-                '${CommonResponse.budget.symbol}${CommonResponse.futureValue}',
+                '${CommonResponse.budget?.symbol ?? "\$"}${CommonResponse.futureValue}',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -298,39 +304,41 @@ class _ShareScreenState extends State<ShareScreen> {
 
   Future<void> _createImage(Widget widget) async {
     try {
-      RenderRepaintBoundary boundary =
-          _globalKey.currentContext.findRenderObject();
+      RenderRepaintBoundary? boundary =
+          _globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) return;
+
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
 
-      ByteData byteData =
+      ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null) return;
+
       Uint8List pngBytes = byteData.buffer.asUint8List();
 
-      await Share.file(
-        'Tooth Tycoon', 'ToothTycoon.png',
-        pngBytes.buffer.asUint8List(), 'image/png',
-        //text: 'Tooth Tycoon!'
-      );
+      // Save to temporary file and share
+      final tempDir = await getTemporaryDirectory();
+      final file = await File('${tempDir.path}/ToothTycoon.png').writeAsBytes(pngBytes);
+      await Share.shareXFiles([XFile(file.path)], text: 'Tooth Tycoon!');
     } catch (e) {
       await Lager.log('Share Image Screen : Share Image Exception : $e');
     }
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     CommonResponse.futureValue = '';
     CommonResponse.investedYear = '';
     NavigationService.instance
         .navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
 
-    return true;
-  }
+     }
 
   void _shareMileStone() async {
     setState(() {
       _isLoading = true;
     });
 
-    String token = await PreferenceHelper().getAccessToken();
+    String? token = await PreferenceHelper().getAccessToken();
     String authToken = '${Constants.VAL_BEARER} $token';
     String childId = CommonResponse.childId.toString();
 

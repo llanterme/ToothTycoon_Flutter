@@ -4,14 +4,14 @@ class LoginPostData {
   String fcmToken;
   String deviceId;
 
-  LoginPostData({this.email, this.password, this.fcmToken, this.deviceId});
+  LoginPostData({required this.email, required this.password, required this.fcmToken, required this.deviceId});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {
-      'email': this.email,
-      'password': this.password,
-      'fcm_token': this.fcmToken,
-      'device_id': this.deviceId,
+      'email': email,
+      'password': password,
+      'fcm_token': fcmToken,
+      'device_id': deviceId,
     };
 
     return data;

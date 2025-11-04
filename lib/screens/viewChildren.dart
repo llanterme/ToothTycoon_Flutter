@@ -21,14 +21,14 @@ class ViewChildScreen extends StatefulWidget {
 }
 
 class _ViewChildScreenState extends State<ViewChildScreen> {
-  APIService _apiService = APIService();
+  final APIService _apiService = APIService();
 
   bool _isLoading = false;
   bool _isDataAvail = true;
 
-  List<ChildData> _childList;
+  List<ChildData>? _childList;
 
-  InterstitialAd _interstitialAd;
+  InterstitialAd? _interstitialAd;
   bool _isInterstitialAdReady = false;
 
   @override
@@ -40,14 +40,14 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
 
   @override
   void dispose() {
-    _interstitialAd.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
   }
 
   void _loadInterstitialAd() {
     InterstitialAd.load(
       adUnitId: AdHelper.interstitialAdUnitId,
-      request: AdRequest(),
+      request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           this._interstitialAd = ad;
@@ -71,8 +71,13 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: Scaffold(
         backgroundColor: AppColors.COLOR_PRIMARY,
         body: SafeArea(
@@ -184,9 +189,9 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
       height: MediaQuery.of(context).size.height * 0.80,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
-          itemCount: _childList != null && _childList.isNotEmpty ? _childList.length : 0,
+          itemCount: _childList?.length ?? 0,
           itemBuilder: (BuildContext context, int index) {
-            return _childCell(_childList[index]);
+            return _childCell(_childList![index]);
           }),
     );
   }
@@ -210,8 +215,8 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
           leading: CircleAvatar(
             radius: 24,
             backgroundImage: childData.img.endsWith("default.jpg")
-                ? AssetImage("assets/images/default.jpeg")
-                : NetworkImage(childData.img),
+                ? const AssetImage("assets/images/default.jpeg")
+                : NetworkImage(childData.img) as ImageProvider,
           ),
           title: Text(
             childData.name,
@@ -226,7 +231,7 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
             '${childData.age} year old',
             style: TextStyle(
               fontSize: 14,
-              color: AppColors.COLOR_TEXT_BLACK.withOpacity(0.5),
+              color: AppColors.COLOR_TEXT_BLACK.withValues(alpha: 0.5),
               fontFamily: 'Avenir',
             ),
           ),
@@ -337,18 +342,17 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
     );
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_HOME);
 
-    return true;
-  }
+     }
 
   void _openAddChildBottomSheet() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       enableDrag: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
@@ -365,21 +369,21 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
       _isLoading = true;
     });
 
-    String token = await PreferenceHelper().getAccessToken();
-    String authToken = '${Constants.VAL_BEARER} $token';
+    String? token = await PreferenceHelper().getAccessToken();
+    String authToken = '${Constants.VAL_BEARER} ${token ?? ''}';
 
     Response response = await _apiService.childListApiCall(authToken);
     dynamic responseData = json.decode(response.body);
-    String message = responseData[Constants.KEY_MESSAGE];
+    String message = responseData[Constants.KEY_MESSAGE] ?? '';
 
     if (response.statusCode == Constants.VAL_RESPONSE_STATUS_OK) {
       var dataList = responseData[Constants.KEY_DATA];
 
-      if (dataList != null && dataList.isNotEmpty) {
+      if (dataList != null && (dataList as List).isNotEmpty) {
         ChildListResponse childListResponse = ChildListResponse.fromJson(responseData);
         setState(() {
           _childList = childListResponse.data;
-          if (_childList != null && _childList.isNotEmpty) {
+          if (_childList != null && _childList!.isNotEmpty) {
             _isDataAvail = true;
           }
           _isLoading = false;

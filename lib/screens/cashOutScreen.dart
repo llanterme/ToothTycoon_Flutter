@@ -30,22 +30,27 @@ class _CashOutScreenState extends State<CashOutScreen> {
   void initState() {
     if (CommonResponse.pullHistoryData != null) {
       if (CommonResponse.pullToothData != null) {
-        int lastEarn = int.parse(CommonResponse.pullToothData.earn);
+        int lastEarn = int.parse(CommonResponse.pullToothData!.earn);
         _maxWithdrawLimit = lastEarn;
       } else {
-        int totalEarn = CommonResponse.pullHistoryData.amount;
+        int totalEarn = CommonResponse.pullHistoryData!.amount ?? 0;
         _maxWithdrawLimit = totalEarn;
       }
     } else if (CommonResponse.pullToothData != null) {
-      _maxWithdrawLimit = int.parse(CommonResponse.pullToothData.earn);
+      _maxWithdrawLimit = int.parse(CommonResponse.pullToothData!.earn);
     }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
@@ -210,7 +215,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
 
   Widget _balanceCountText() {
     return AutoSizeText(
-      '${CommonResponse.budget.symbol}$_maxWithdrawLimit',
+      '${CommonResponse.budget?.symbol ?? '\$'}$_maxWithdrawLimit',
       minFontSize: 28,
       maxFontSize: 32,
       style: TextStyle(
@@ -270,7 +275,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
       ),
       child: Center(
         child: Text(
-          '${CommonResponse.budget.symbol}${_withdrawBalanceCount.toInt()}',
+          '${CommonResponse.budget?.symbol ?? '\$'}${_withdrawBalanceCount.toInt()}',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -348,7 +353,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
     );
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     if (!CommonResponse.isFromChildSummary) {
       NavigationService.instance.navigateToReplacementNamed(
           Constants.KEY_ROUTE_CONGRATULATIONS_ON_TOOTH_PULL);
@@ -356,8 +361,6 @@ class _CashOutScreenState extends State<CashOutScreen> {
       NavigationService.instance
           .navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
     }
-
-    return true;
   }
 
   void _withdrawCash() async {
@@ -365,7 +368,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
       _isLoading = true;
     });
 
-    String token = await PreferenceHelper().getAccessToken();
+    String? token = await PreferenceHelper().getAccessToken();
     String authToken = '${Constants.VAL_BEARER} $token';
 
     String childId = CommonResponse.childId.toString();
@@ -374,7 +377,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
     if (CommonResponse.isFromChildSummary) {
       pullId = '0';
     } else {
-      pullId = CommonResponse.pullToothData.id.toString();
+      pullId = CommonResponse.pullToothData!.id.toString();
     }
 
     Response response =

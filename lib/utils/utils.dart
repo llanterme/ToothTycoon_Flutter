@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:io' as Io;
 import 'dart:typed_data';
 import 'package:bot_toast/bot_toast.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:encrypt/encrypt.dart';
 
 class Utils {
-  static String validateMobileNo(String mobileNo) {
+  static String? validateMobileNo(String mobileNo) {
     RegExp regExp = RegExp(r"^[0][1-9]\d{9}$|^[1-9]\d{9}$");
 
     if (mobileNo.trim().isEmpty) {
@@ -26,7 +26,7 @@ class Utils {
     return null;
   }
 
-  static String validateEmailId(String emailId) {
+  static String? validateEmailId(String emailId) {
     RegExp regExp = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
@@ -41,7 +41,7 @@ class Utils {
     return null;
   }
 
-  static String validatePassword(String password,
+  static String? validatePassword(String password,
       {bool isConfirmPassword = false}) {
     RegExp regExp = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
 
@@ -101,7 +101,7 @@ class Utils {
   }
 
   static showAlertDialog(BuildContext context, String message) {
-    Widget okButton = FlatButton(
+    Widget okButton = TextButton(
       child: Text("OK"),
       onPressed: () => Navigator.pop(context),
     );
@@ -122,7 +122,7 @@ class Utils {
     );
   }
 
-  static showToast({String message, durationInSecond}) {
+  static showToast({required String message, durationInSecond}) {
     BotToast.showText(
       text: message,
       duration: Duration(seconds: durationInSecond),
@@ -145,21 +145,21 @@ class Utils {
   }
 
   static Future<List<String>> getDeviceDetails() async {
-    String deviceName;
-    String deviceVersion;
-    String identifier;
-    final DeviceInfoPlugin deviceInfoPlugin = new DeviceInfoPlugin();
+    String deviceName = '';
+    String deviceVersion = '';
+    String identifier = '';
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     try {
       if (Platform.isAndroid) {
         var build = await deviceInfoPlugin.androidInfo;
-        deviceName = build.model;
+        deviceName = build.model ?? '';
         deviceVersion = build.version.toString();
-        identifier = build.androidId; //UUID for Android
+        identifier = build.id ?? ''; //UUID for Android (was build.androidId)
       } else if (Platform.isIOS) {
         var data = await deviceInfoPlugin.iosInfo;
-        deviceName = data.name;
-        deviceVersion = data.systemVersion;
-        identifier = data.identifierForVendor; //UUID for iOS
+        deviceName = data.name ?? '';
+        deviceVersion = data.systemVersion ?? '';
+        identifier = data.identifierForVendor ?? ''; //UUID for iOS
       }
     } on PlatformException {
       print('Failed to get platform version');

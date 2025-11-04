@@ -22,7 +22,7 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
 
   String analysingStatus = 'Analysing';
 
-  InterstitialAd _interstitialAd;
+  InterstitialAd? _interstitialAd;
   bool _isInterstitialAdReady = false;
 
   @override
@@ -35,14 +35,19 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
 
   @override
   void dispose() {
-    _interstitialAd.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
@@ -60,7 +65,7 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
             child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              color: AppColors.COLOR_PRIMARY.withOpacity(0.7),
+              color: AppColors.COLOR_PRIMARY.withValues(alpha: 0.7),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -240,9 +245,7 @@ class _AnalysingScreenState extends State<AnalysingScreen> {
     );
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
-
-    return true;
   }
 }
