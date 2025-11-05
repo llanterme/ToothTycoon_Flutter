@@ -45,7 +45,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
             : Expanded(
                 child: Scrollbar(
                   controller: _scrollController,
-                  isAlwaysShown: true,
+                  thumbVisibility: true,
                   thickness: 6,
                   radius: Radius.circular(5),
                   child: SingleChildScrollView(
@@ -129,7 +129,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
             width: 100,
             child: Center(
               child: Text(
-                '${CommonResponse.budget.symbol}$_totalAmount',
+                '${CommonResponse.budget?.symbol ?? "\$"}$_totalAmount',
                 style: TextStyle(fontSize: 28, fontFamily: 'Avenir'),
               ),
             ),
@@ -198,7 +198,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
   Widget _cashOutBtn() {
     return InkWell(
       onTap: () {
-        if (CommonResponse.pullHistoryData.amount > 0) {
+        if (CommonResponse.pullHistoryData!.amount > 0) {
           CommonResponse.isFromChildSummary = true;
           NavigationService.instance
               .navigateToReplacementNamed(Constants.KEY_ROUTE_CASH_OUT_SCREEN);
@@ -289,7 +289,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
   }
 
   void _getHistory() async {
-    String token = await PreferenceHelper().getAccessToken();
+    String? token = await PreferenceHelper().getAccessToken();
     String authToken = '${Constants.VAL_BEARER} $token';
 
     Response response = await _apiService.pullHistoryApiCall(
@@ -309,14 +309,14 @@ class _SummaryScreenState extends State<SummaryScreen> {
 
         int toothCount = 0;
 
-        if (pullHistoryResponse.data.teethList != null &&
-            pullHistoryResponse.data.teethList.isNotEmpty) {
-          toothCount = pullHistoryResponse.data.teethList.length;
+        if (pullHistoryResponse.data?.teethList != null &&
+            pullHistoryResponse.data!.teethList!.isNotEmpty) {
+          toothCount = pullHistoryResponse.data!.teethList!.length;
         }
 
         setState(() {
           _collectedTooth = toothCount;
-          _totalAmount = pullHistoryResponse.data.amount;
+          _totalAmount = pullHistoryResponse.data?.amount ?? 0;
           _isLoading = false;
         });
       } else {

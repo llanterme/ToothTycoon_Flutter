@@ -8,22 +8,26 @@ class VideoPlayerWidget extends StatefulWidget {
   final String videoPath;
   final bool isVideoLooping;
 
-  VideoPlayerWidget(
-      {this.height, this.width, this.videoPath, this.isVideoLooping = false});
+  const VideoPlayerWidget({
+    required this.height,
+    required this.width,
+    required this.videoPath,
+    this.isVideoLooping = false,
+  });
 
   @override
   _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
 }
 
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-  VideoPlayerController _videoPlayerController;
+  VideoPlayerController? _videoPlayerController;
 
-  bool _isVideoLooping = false;
+  late bool _isVideoLooping;
 
-  double _height = 0;
-  double _width = 0;
+  late double _height;
+  late double _width;
 
-  String _videoPath = '';
+  late String _videoPath;
 
   @override
   void initState() {
@@ -43,10 +47,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       width: _width,
       child: _videoPlayerController != null
           ? AspectRatio(
-              aspectRatio: _videoPlayerController.value.size != null
-                  ? _videoPlayerController.value.aspectRatio
-                  : 1.0,
-              child: VideoPlayer(_videoPlayerController),
+              aspectRatio: _videoPlayerController!.value.aspectRatio,
+              child: VideoPlayer(_videoPlayerController!),
             )
           : Container(),
     );
@@ -54,9 +56,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   void _initController() async {
     _videoPlayerController = VideoPlayerController.asset(_videoPath);
-    _videoPlayerController.setLooping(_isVideoLooping);
-    _videoPlayerController.initialize();
-    _videoPlayerController.play();
-    _videoPlayerController.setVolume(0.0);
+    _videoPlayerController?.setLooping(_isVideoLooping);
+    _videoPlayerController?.initialize();
+    _videoPlayerController?.play();
+    _videoPlayerController?.setVolume(0.0);
   }
 }

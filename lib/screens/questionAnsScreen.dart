@@ -40,8 +40,13 @@ class _QuestionAnsScreenState extends State<QuestionAnsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
@@ -348,19 +353,18 @@ class _QuestionAnsScreenState extends State<QuestionAnsScreen> {
     );
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     NavigationService.instance
         .navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
 
-    return true;
-  }
+     }
 
   void _submitAns() async {
     setState(() {
       _isLoading = true;
     });
 
-    String token = await PreferenceHelper().getAccessToken();
+    String? token = await PreferenceHelper().getAccessToken();
     String authToken = '${Constants.VAL_BEARER} $token';
 
     String childId = CommonResponse.childId.toString();
@@ -379,7 +383,7 @@ class _QuestionAnsScreenState extends State<QuestionAnsScreen> {
         _isLoading = false;
       });
 
-      if (submitQuestionResponse.data.count == 15) {
+      if (submitQuestionResponse.data?.count == 15) {
         NavigationService.instance.navigateToReplacementNamed(
             Constants.KEY_ROUTE_RECEIVE_BADGE_SCREEN);
       } else {

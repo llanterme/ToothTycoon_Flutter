@@ -15,8 +15,13 @@ class _ReceiveBadgeScreenState extends State<ReceiveBadgeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
@@ -214,10 +219,9 @@ class _ReceiveBadgeScreenState extends State<ReceiveBadgeScreen> {
     );
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     NavigationService.instance
         .navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
 
-    return true;
-  }
+     }
 }

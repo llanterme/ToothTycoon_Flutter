@@ -13,16 +13,16 @@ class BadgesScreen extends StatefulWidget {
 }
 
 class _BadgesScreenState extends State<BadgesScreen> {
-  List<Badges> _badgesList;
+  List<Badges>? _badgesList;
 
   bool _isDataAvail = true;
 
   @override
   void initState() {
     if (CommonResponse.pullHistoryData != null) {
-      if (CommonResponse.pullHistoryData.badges != null &&
-          CommonResponse.pullHistoryData.badges.isNotEmpty) {
-        _badgesList = CommonResponse.pullHistoryData.badges;
+      if (CommonResponse.pullHistoryData!.badges != null &&
+          CommonResponse.pullHistoryData!.badges!.isNotEmpty) {
+        _badgesList = CommonResponse.pullHistoryData!.badges;
       }
     } else {
       _isDataAvail = false;
@@ -50,11 +50,11 @@ class _BadgesScreenState extends State<BadgesScreen> {
             (((MediaQuery.of(context).size.width) / 2) / 410),
         primary: false,
         children: List.generate(
-          _badgesList != null && _badgesList.isNotEmpty
-              ? _badgesList.length
+          _badgesList != null && _badgesList!.isNotEmpty
+              ? _badgesList!.length
               : 0,
           (index) {
-            return _badgeCell(_badgesList[index]);
+            return _badgeCell(_badgesList![index]);
           },
         ),
       ),

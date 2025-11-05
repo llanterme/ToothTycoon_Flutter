@@ -1,48 +1,48 @@
 class PullToothResponse {
-  int status;
-  String message;
-  PullToothData data;
+  late int status;
+  late String message;
+  PullToothData? data;
 
-  PullToothResponse({this.status, this.message, this.data});
+  PullToothResponse({required this.status, required this.message, this.data});
 
   PullToothResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new PullToothData.fromJson(json['data']) : null;
+    data = json['data'] != null ? PullToothData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class PullToothData {
-  String childId;
-  String teethNumber;
-  String pullDate;
-  String picture;
-  String updatedAt;
-  String createdAt;
-  int id;
-  String reward;
-  String earn;
+  late String childId;
+  late String teethNumber;
+  late String pullDate;
+  late String picture;
+  late String updatedAt;
+  late String createdAt;
+  late int id;
+  late String reward;
+  late String earn;
 
   PullToothData(
-      {this.childId,
-        this.teethNumber,
-        this.pullDate,
-        this.picture,
-        this.updatedAt,
-        this.createdAt,
-        this.id,
-        this.reward,
-        this.earn});
+      {required this.childId,
+        required this.teethNumber,
+        required this.pullDate,
+        required this.picture,
+        required this.updatedAt,
+        required this.createdAt,
+        required this.id,
+        required this.reward,
+        required this.earn});
 
   PullToothData.fromJson(Map<String, dynamic> json) {
     childId = json['child_id'];
@@ -57,16 +57,16 @@ class PullToothData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['child_id'] = this.childId;
-    data['teeth_number'] = this.teethNumber;
-    data['pull_date'] = this.pullDate;
-    data['picture'] = this.picture;
-    data['updated_at'] = this.updatedAt;
-    data['created_at'] = this.createdAt;
-    data['id'] = this.id;
-    data['earn'] = this.earn;
-    data['reward'] = this.reward;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['child_id'] = childId;
+    data['teeth_number'] = teethNumber;
+    data['pull_date'] = pullDate;
+    data['picture'] = picture;
+    data['updated_at'] = updatedAt;
+    data['created_at'] = createdAt;
+    data['id'] = id;
+    data['earn'] = earn;
+    data['reward'] = reward;
     return data;
   }
 }

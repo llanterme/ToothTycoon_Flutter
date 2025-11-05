@@ -1,11 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
-import 'package:esys_flutter_share/esys_flutter_share.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:tooth_tycoon/bottomsheet/addChildBottomSheet.dart';
 import 'package:tooth_tycoon/bottomsheet/setBudgetBottomSheet.dart';
@@ -17,7 +13,6 @@ import 'package:tooth_tycoon/models/responseModel/loginResponseModel.dart';
 import 'package:tooth_tycoon/services/apiService.dart';
 import 'package:tooth_tycoon/services/navigation_service.dart';
 import 'package:tooth_tycoon/utils/commonResponse.dart';
-import 'package:tooth_tycoon/utils/encryptUtils.dart';
 import 'package:tooth_tycoon/utils/utils.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  APIService _apiService = APIService();
+  final APIService _apiService = APIService();
 
   bool _isLoading = true;
 
@@ -39,8 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     print('Device Height : ${MediaQuery.of(context).size.height}');
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          await _onBackPress();
+        }
+      },
       child: Scaffold(
         backgroundColor: AppColors.COLOR_PRIMARY,
         body: SafeArea(
@@ -135,9 +135,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Container(
             height: 15,
-            margin: EdgeInsets.symmetric(horizontal: 20),
+            margin: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(5),
                 topRight: Radius.circular(5),
@@ -446,29 +446,29 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       isScrollControlled: true,
       enableDrag: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) => Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: AddChildBottomSheet(),
+        child: AddChildBottomSheet(refreshPage: () {}),
       ),
     );
   }
 
   Future<bool> _onBackPress() async {
     exit(0);
-    return true;
   }
 
   void _logout() async {
-    await PreferenceHelper().setLoginResponse(null);
+    await PreferenceHelper().setLoginResponse('');
     await PreferenceHelper().setIsUserLogin(false);
+    await PreferenceHelper().clearRememberMeData(); // Clear saved credentials
     NavigationService.instance.navigateToReplacementNamed(Constants.KEY_ROUTE_WELCOME);
   }
 
   void _getCurrency() async {
-    String authToken = await PreferenceHelper().getAccessToken();
+    String authToken = await PreferenceHelper().getAccessToken() ?? '';
 
     Response response = await _apiService.getCurrencyApiCall(authToken);
     var responseData = json.decode(response.body);
@@ -478,27 +478,29 @@ class _HomeScreenState extends State<HomeScreen> {
       CurrencyResponse currencyResponse = CurrencyResponse.fromJson(responseData);
       CommonResponse.currencyResponse = currencyResponse;
 
-      String selCurrencyId = await PreferenceHelper().getCurrencyId();
-      String amount = await PreferenceHelper().getCurrencyAmount();
+      String? selCurrencyId = await PreferenceHelper().getCurrencyId();
+      String? amount = await PreferenceHelper().getCurrencyAmount();
 
-      if (selCurrencyId != null && selCurrencyId.isNotEmpty) {
-        for (CurrencyData currencyData in currencyResponse.data) {
+      if (selCurrencyId != null && selCurrencyId.isNotEmpty && amount != null) {
+        for (CurrencyData currencyData in currencyResponse.data!) {
           if (currencyData.id.toString() == selCurrencyId) {
-            Budget budget = Budget();
-            budget.currencyId = currencyData.id.toString();
-            budget.amount = amount;
-            budget.code = currencyData.code;
-            budget.symbol = currencyData.symbol;
+            Budget budget = Budget(
+              currencyId: currencyData.id.toString(),
+              amount: amount,
+              code: currencyData.code,
+              symbol: currencyData.symbol,
+            );
+            CommonResponse.budget = budget;
             break;
           }
         }
       }
 
-      String responseStr = await PreferenceHelper().getLoginResponse();
+      String? responseStr = await PreferenceHelper().getLoginResponse();
       if (responseStr != null && responseStr.isNotEmpty) {
         var responseData = json.decode(responseStr);
         LoginResponse loginResponse = LoginResponse.fromJson(responseData);
-        CommonResponse.budget = loginResponse.data.budget;
+        CommonResponse.budget = loginResponse.data?.budget;
       }
       if (mounted) {
         setState(() {
@@ -506,9 +508,11 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } else {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
 
       Utils.showToast(message: message, durationInSecond: 3);
     }

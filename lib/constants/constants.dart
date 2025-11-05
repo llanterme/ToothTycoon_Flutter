@@ -8,6 +8,9 @@ class Constants {
   static const String KEY_USER_ID = 'USER_ID';
   static const String KEY_CURRENCY_ID = 'CURRENCY_ID';
   static const String KEY_CURRENCY_AMOUNT = 'CURRENCY_AMOUNT';
+  static const String KEY_REMEMBER_ME = 'REMEMBER_ME';
+  static const String KEY_SAVED_EMAIL = 'SAVED_EMAIL';
+  static const String KEY_SAVED_PASSWORD = 'SAVED_PASSWORD';
 
   // Routes Key
   static const String KEY_ROUTE_SPLASH = 'SPLASH';

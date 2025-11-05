@@ -16,7 +16,7 @@ class PullToothScreen extends StatefulWidget {
 }
 
 class _PullToothScreenState extends State<PullToothScreen> {
-  VideoPlayerController _videoPlayerController;
+  VideoPlayerController? _videoPlayerController;
 
   // Ratio = Width / Height
   double ratio = 800 / 600;
@@ -33,20 +33,25 @@ class _PullToothScreenState extends State<PullToothScreen> {
   @override
   void initState() {
     super.initState();
-    _initController(null, null);
+    _initController('', '');
     //_startTime();
   }
 
   @override
   void dispose() {
-    if (_videoPlayerController != null) _videoPlayerController.dispose();
+    _videoPlayerController?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
@@ -172,12 +177,10 @@ class _PullToothScreenState extends State<PullToothScreen> {
       color: AppColors.COLOR_PRIMARY,
       height: _height,
       width: _width,
-      child: _videoPlayerController != null
+      child: _videoPlayerController != null && _videoPlayerController!.value.isInitialized
           ? AspectRatio(
-              aspectRatio: _videoPlayerController.value.size != null
-                  ? _videoPlayerController.value.aspectRatio
-                  : 1.0,
-              child: VideoPlayer(_videoPlayerController),
+              aspectRatio: _videoPlayerController!.value.aspectRatio,
+              child: VideoPlayer(_videoPlayerController!),
             )
           : Container(),
     );
@@ -239,12 +242,16 @@ class _PullToothScreenState extends State<PullToothScreen> {
       flex: 8,
       child: InkWell(
         onTap: () {
+          print('Tooth 1 tapped! _isClickable: $_isClickable');
           if (_isClickable) {
+            print('Tooth 1 - Starting video playback');
             _mouthOpenVideoPath = 'assets/videos/toothSelectionVideo/t1.mp4';
             _isClickable = false;
             CommonResponse.selectedTooth = '1';
             _initController(Constants.TEETH_SECOND_MOLAR,
                 Constants.DESCRIPTION_SECOND_MOLAR);
+          } else {
+            print('Tooth 1 - Not clickable (video is playing)');
           }
         },
         child: Container(
@@ -743,12 +750,11 @@ class _PullToothScreenState extends State<PullToothScreen> {
     );
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     NavigationService.instance
         .navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
 
-    return true;
-  }
+     }
 
   _startTime() async {
     var _duration = new Duration(milliseconds: 500);
@@ -773,26 +779,31 @@ class _PullToothScreenState extends State<PullToothScreen> {
   }
 
   void _initController(String toothName, String teethDescription) async {
+    print('_initController called with tooth: $toothName');
     VideoPlayerController controller =
         VideoPlayerController.asset(_mouthOpenVideoPath);
     controller.setLooping(false);
-    controller.initialize();
+    await controller.initialize();
     controller.setVolume(0.0);
 
     setState(() {
       _videoPlayerController = controller;
-      _videoPlayerController.play();
-      _videoPlayerController.addListener(() {
-        print('On Listner : ${_videoPlayerController.value.isPlaying}');
+      _videoPlayerController!.play();
+      print('Video started playing: $_mouthOpenVideoPath');
+      _videoPlayerController!.addListener(() {
+        print('On Listner : ${_videoPlayerController!.value.isPlaying}');
 
         setState(() {
-          if (!_videoPlayerController.value.isPlaying) {
+          if (!_videoPlayerController!.value.isPlaying) {
+            print('Video finished playing. _isInit: $_isInit');
             _isVideoVisible = false;
             _startTime();
             if (_isInit) {
+              print('Initial load - playing first molar video');
               _playFirstMollerVideo();
               _isInit = false;
             } else {
+              print('Setting tooth name to: $toothName');
               _toothName = toothName;
               _teethDescription = teethDescription;
             }

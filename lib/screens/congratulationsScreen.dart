@@ -16,14 +16,19 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
 
   @override
   void initState() {
-    _daysCount = CommonResponse.submitQuestionData.count;
+    _daysCount = CommonResponse.submitQuestionData?.count ?? 0;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.COLOR_PRIMARY,
@@ -208,10 +213,9 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
     );
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     NavigationService.instance
         .navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
 
-    return true;
-  }
+     }
 }

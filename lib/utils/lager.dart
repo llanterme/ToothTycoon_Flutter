@@ -4,8 +4,8 @@ import 'package:synchronized/synchronized.dart';
 
 class Lager {
 
-  static final _lock = Lock();  // uses the “synchronized” package
-  static File _logFile;
+  static final _lock = Lock();  // uses the "synchronized" package
+  static late File _logFile;
 
   static Future initializeLogging(String canonicalLogFileName) async {
     _logFile = _createLogFile(canonicalLogFileName);

@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
@@ -16,7 +15,7 @@ import 'package:tooth_tycoon/services/navigation_service.dart';
 import 'package:tooth_tycoon/utils/commonResponse.dart';
 
 class CaptureImageScreen extends StatefulWidget {
-  final String teethNumber;
+  final String? teethNumber;
 
   CaptureImageScreen({this.teethNumber});
 
@@ -27,13 +26,13 @@ class CaptureImageScreen extends StatefulWidget {
 class _CaptureImageScreenState extends State<CaptureImageScreen>
     with WidgetsBindingObserver {
   APIService _apiService = APIService();
-  CameraController controller;
+  CameraController? controller;
 
   bool _isLoading = false;
   bool _isFrontCamera = true;
   bool _isImageCapture = false;
 
-  String imagePath;
+  String? imagePath;
 
   List<CameraDescription> cameras = [];
 
@@ -47,13 +46,16 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
 
   @override
   Widget build(BuildContext context) {
-    double ratio = 16 / 9;
-
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: Scaffold(
         bottomNavigationBar: _customBottomAppBar(),
-        backgroundColor: AppColors.COLOR_PRIMARY.withOpacity(0.8),
+        backgroundColor: AppColors.COLOR_PRIMARY.withValues(alpha: 0.8),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           backgroundColor: AppColors.COLOR_LIGHT_RED,
@@ -91,10 +93,12 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
           bottom: 0,
           child: Container(
             height: MediaQuery.of(context).size.width * (16 / 9),
-            child: AspectRatio(
-              aspectRatio: controller.value.aspectRatio,
-              child: CameraPreview(controller),
-            ),
+            child: controller != null && controller!.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: controller!.value.aspectRatio,
+                    child: CameraPreview(controller!),
+                  )
+                : Center(child: CircularProgressIndicator()),
           ),
         ),
         Positioned(
@@ -106,8 +110,8 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
               end: const Alignment(0.0, 0.4),
               begin: const Alignment(0.0, -1),
               colors: <Color>[
-                AppColors.COLOR_PRIMARY.withOpacity(0.8),
-                AppColors.COLOR_PRIMARY.withOpacity(0.0),
+                AppColors.COLOR_PRIMARY.withValues(alpha: 0.8),
+                AppColors.COLOR_PRIMARY.withValues(alpha: 0.0),
               ],
             )),
             width: MediaQuery.of(context).size.width,
@@ -186,7 +190,7 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: Image.file(
-        File(imagePath),
+        File(imagePath!),
         fit: BoxFit.fill,
       ),
     );
@@ -194,19 +198,24 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
 
   void _initCamera() async {
     WidgetsBinding.instance.addObserver(this);
+
     availableCameras().then((value) {
       cameras = value;
+      if (cameras.isEmpty) {
+        print('No cameras available');
+        return;
+      }
       controller = CameraController(cameras[1], ResolutionPreset.medium,
           enableAudio: false);
-      controller.initialize().then(
-            (value) => onNewCameraSelected(controller.description),
+      controller!.initialize().then(
+            (value) => onNewCameraSelected(controller!.description),
           );
     });
   }
 
   void onNewCameraSelected(CameraDescription cameraDescription) async {
     if (controller != null) {
-      await controller.dispose();
+      await controller?.dispose();
     }
     controller = CameraController(
       cameraDescription,
@@ -215,16 +224,16 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
     );
 
     // If the controller is updated then update the UI.
-    controller.addListener(() {
+    controller!.addListener(() {
       if (mounted) setState(() {});
-      if (controller.value.hasError) {
+      if (controller!.value.hasError) {
         //showInSnackBar('Camera error ${controller.value.errorDescription}');
         //showToast('Camera error ${controller.value.errorDescription}');
       }
     });
 
     try {
-      await controller.initialize();
+      await controller!.initialize();
     } on CameraException catch (e) {
       print('Camera Exception : $e');
     }
@@ -235,11 +244,11 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
   }
 
   void _onTakePictureButtonPressed() {
-    _takePicture().then((String filePath) {
+    _takePicture().then((String? filePath) {
       if (mounted) {
         setState(() {
           imagePath = filePath;
-          CommonResponse.capturedImagePath = imagePath;
+          CommonResponse.capturedImagePath = imagePath ?? '';
           _isImageCapture = true;
         });
         print('Image Path $imagePath');
@@ -250,8 +259,8 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
     });
   }
 
-  Future<String> _takePicture() async {
-    if (!controller.value.isInitialized) {
+  Future<String?> _takePicture() async {
+    if (controller == null || !controller!.value.isInitialized) {
       //showInSnackBar('Error: select a camera first.');
       //showToast('Error: select a camera first.');
       return null;
@@ -261,19 +270,21 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
     await Directory(dirPath).create(recursive: true);
     final String filePath = '$dirPath/${timestamp()}.jpg';
 
-    if (controller.value.isTakingPicture) {
+    if (controller!.value.isTakingPicture) {
       // A capture is already pending, do nothing.
       return null;
     }
 
     try {
-      await controller.takePicture(filePath);
+      final XFile picture = await controller!.takePicture();
+      await picture.saveTo(filePath);
     } on CameraException catch (e) {
       print('Take Picture Exception $e');
       return null;
     }
     return filePath;
   }
+
 
   void _setFromCamera() {
     setState(() {
@@ -304,19 +315,18 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
 
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     NavigationService.instance
         .navigateToReplacementNamed(Constants.KEY_ROUTE_PULL_TOOTH);
 
-    return true;
-  }
+     }
 
   void _submitTooth() async {
     setState(() {
       _isLoading = true;
     });
 
-    String token = await PreferenceHelper().getAccessToken();
+    String? token = await PreferenceHelper().getAccessToken();
     String authToken = '${Constants.VAL_BEARER} $token';
 
     String childId = CommonResponse.childId.toString();
@@ -333,7 +343,7 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
     String pullDate = '$year-$month-$day';
 
     Response response = await _apiService.pullTeethApiCall(
-        childId, teethNumber, pullDate, authToken, imagePath);
+        childId, teethNumber, pullDate, authToken, imagePath ?? '');
     dynamic responseData = json.decode(response.body);
     String message = responseData[Constants.KEY_MESSAGE];
 

@@ -26,12 +26,12 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
 
   bool _isLoading = false;
 
-  CurrencyData _selCurrencyData;
+  CurrencyData? _selCurrencyData;
   List<CurrencyData> _currencyList = [];
 
   String _selCurrency = '';
 
-  InterstitialAd _interstitialAd;
+  InterstitialAd? _interstitialAd;
   bool _isInterstitialAdReady = false;
 
   void _loadInterstitialAd() {
@@ -58,27 +58,27 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
 
   @override
   void dispose() {
-    _interstitialAd.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     _loadInterstitialAd();
-    _currencyList = CommonResponse.currencyResponse.data;
+    _currencyList = CommonResponse.currencyResponse?.data ?? [];
     setState(() {
-      if (_currencyList != null && _currencyList.isNotEmpty) {
+      if (_currencyList.isNotEmpty) {
         for (CurrencyData currencyData in _currencyList) {
           if (CommonResponse.budget != null) {
-            if (int.parse(CommonResponse.budget.currencyId) == currencyData.id) {
+            if (int.parse(CommonResponse.budget!.currencyId) == currencyData.id) {
               _selCurrencyData = currencyData;
-              _selCurrency = _selCurrencyData.symbol;
-              amountCounter = double.parse(CommonResponse.budget.amount).toInt();
+              _selCurrency = currencyData.symbol;
+              amountCounter = double.parse(CommonResponse.budget!.amount).toInt();
             }
           } else {
             if (currencyData.code == 'USD') {
               _selCurrencyData = currencyData;
-              _selCurrency = _selCurrencyData.symbol;
+              _selCurrency = currencyData.symbol;
               break;
             }
           }
@@ -236,7 +236,7 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
       onTap: () {
         setState(() {
           _selCurrencyData = currency;
-          _selCurrency = _selCurrencyData.symbol;
+          _selCurrency = currency.symbol;
         });
       },
       child: Container(
@@ -244,9 +244,9 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
         width: 60,
         margin: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-            color: _selCurrencyData.code == currency.code
+            color: _selCurrencyData?.code == currency.code
                 ? AppColors.COLOR_BTN_BLUE
-                : Colors.grey.withOpacity(0.3),
+                : Colors.grey.withValues(alpha: 0.3),
             borderRadius: BorderRadius.all(Radius.circular(15))),
         child: Center(
           child: Text(
@@ -359,6 +359,15 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
   }
 
   void _submit() async {
+    // Validate that a currency has been selected
+    if (_selCurrencyData == null) {
+      Utils.showAlertDialog(
+        context,
+        'No currency available. Please contact support.',
+      );
+      return;
+    }
+
     if (_isInterstitialAdReady) {
       _interstitialAd?.show();
     }
@@ -366,34 +375,35 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
       _isLoading = true;
     });
 
-    String token = await PreferenceHelper().getAccessToken();
-    String authToken = 'Bearer $token';
+    String? token = await PreferenceHelper().getAccessToken();
+    String authToken = 'Bearer ${token ?? ''}';
     String amount = amountCounter.toString();
 
     Response response =
-        await _apiService.setBudgetApiCall(amount, authToken, _selCurrencyData.id.toString());
+        await _apiService.setBudgetApiCall(amount, authToken, _selCurrencyData!.id.toString());
     dynamic responseData = json.decode(response.body);
-    String message = responseData[Constants.KEY_MESSAGE];
+    String message = responseData[Constants.KEY_MESSAGE] ?? '';
 
     if (response.statusCode == Constants.VAL_RESPONSE_STATUS_OK) {
       setState(() {
         _isLoading = false;
       });
-      Budget budget = Budget();
-      budget.currencyId = _selCurrencyData.id.toString();
-      budget.code = _selCurrencyData.code;
-      budget.symbol = _selCurrencyData.symbol;
-      budget.amount = amount;
+      Budget budget = Budget(
+        currencyId: _selCurrencyData!.id.toString(),
+        code: _selCurrencyData!.code!,
+        symbol: _selCurrencyData!.symbol!,
+        amount: amount,
+      );
       CommonResponse.budget = budget;
-      await PreferenceHelper().setCurrencyId(_selCurrencyData.id.toString());
+      await PreferenceHelper().setCurrencyId(_selCurrencyData!.id.toString());
       await PreferenceHelper().setCurrencyAmount(amount);
 
-      String responseStr = await PreferenceHelper().getLoginResponse();
+      String? responseStr = await PreferenceHelper().getLoginResponse();
 
       if (responseStr != null && responseStr.isNotEmpty) {
         var loginResponseData = json.decode(responseStr);
         LoginResponse loginResponse = LoginResponse.fromJson(loginResponseData);
-        loginResponse.data.budget = budget;
+        loginResponse.data?.budget = budget;
         loginResponse.status = '1';
         String loginResponseStr = json.encode(loginResponse.toJson());
         await PreferenceHelper().setLoginResponse(loginResponseStr);

@@ -14,12 +14,12 @@ class CommonResponse {
   static String investedYear = '';
   static String futureValue = '';
 
-  static PullToothData pullToothData;
-  static PullHistoryData pullHistoryData;
-  static ChildData childData;
-  static SubmitQuestionData submitQuestionData;
-  static CurrencyResponse currencyResponse;
-  static Budget budget;
+  static PullToothData? pullToothData;
+  static PullHistoryData? pullHistoryData;
+  static ChildData? childData;
+  static SubmitQuestionData? submitQuestionData;
+  static CurrencyResponse? currencyResponse;
+  static Budget? budget;
 
   static bool isFromChildSummary = false;
 }

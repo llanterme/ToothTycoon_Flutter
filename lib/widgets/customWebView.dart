@@ -6,7 +6,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 class CustomWebView extends StatefulWidget {
   final String selectedUrl;
 
-  CustomWebView({this.selectedUrl});
+  CustomWebView({required this.selectedUrl});
 
   @override
   _CustomWebViewState createState() => _CustomWebViewState();
@@ -37,25 +37,28 @@ class _CustomWebViewState extends State<CustomWebView> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: WebView(
-          initialUrl: widget.selectedUrl,
-          onWebViewCreated: (WebViewController webViewController) {
-            _controller.complete(webViewController);
-          },
-          onPageStarted: (String url) {
-            print('Page started loading: $url');
-          },
-          onPageFinished: (String url) {
-            print('Page finished loading: $url');
-            if (url.contains("#access_token")) {
-              succeed(url);
-            }
+        child: WebViewWidget(
+          controller: WebViewController()
+            ..setJavaScriptMode(JavaScriptMode.unrestricted)
+            ..setNavigationDelegate(
+              NavigationDelegate(
+                onPageStarted: (String url) {
+                  print('Page started loading: $url');
+                },
+                onPageFinished: (String url) {
+                  print('Page finished loading: $url');
+                  if (url.contains("#access_token")) {
+                    succeed(url);
+                  }
 
-            if (url.contains(
-                "https://www.facebook.com/connect/login_success.html?error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied")) {
-              denied();
-            }
-          },
+                  if (url.contains(
+                      "https://www.facebook.com/connect/login_success.html?error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied")) {
+                    denied();
+                  }
+                },
+              ),
+            )
+            ..loadRequest(Uri.parse(widget.selectedUrl)),
         ),
       ),
     );

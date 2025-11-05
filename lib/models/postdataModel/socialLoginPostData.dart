@@ -1,19 +1,19 @@
 class SocialLoginPostData {
-  String email;
-  String name;
-  String socialId;
-  String socialName;
-  String fcmToken;
-  String deviceId;
+  late String email;
+  late String name;
+  late String socialId;
+  late String socialName;
+  late String fcmToken;
+  late String deviceId;
 
   Map<String, String> toJson() {
     Map<String, String> data = {
-      'email': this.email,
-      'name': this.name,
-      'social_id': this.socialId,
-      'social_name': this.socialName,
-      'fcm_token': this.fcmToken,
-      'device_id': this.deviceId,
+      'email': email,
+      'name': name,
+      'social_id': socialId,
+      'social_name': socialName,
+      'fcm_token': fcmToken,
+      'device_id': deviceId,
     };
     return data;
   }

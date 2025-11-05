@@ -31,8 +31,13 @@ class _TellYourFriendScreenState extends State<TellYourFriendScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPress,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _onBackPress();
+        }
+      },
       child: SafeArea(
         child: Scaffold(
           body: Stack(
@@ -43,7 +48,7 @@ class _TellYourFriendScreenState extends State<TellYourFriendScreen> {
                 fit: BoxFit.fill,
               ),
               Container(
-                color: AppColors.COLOR_PRIMARY.withOpacity(0.7),
+                color: AppColors.COLOR_PRIMARY.withValues(alpha: 0.7),
                 child: MediaQuery.of(context).size.height <= 639
                     ? _scrollableMainView()
                     : _nonScrollableMainView(),
@@ -266,10 +271,9 @@ class _TellYourFriendScreenState extends State<TellYourFriendScreen> {
     );
   }
 
-  Future<bool> _onBackPress() async {
+  void _onBackPress() {
     NavigationService.instance
         .navigateToReplacementNamed(Constants.KEY_ROUTE_CHILD_DETAIL);
 
-    return true;
-  }
+     }
 }

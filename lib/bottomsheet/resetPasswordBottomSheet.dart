@@ -17,8 +17,8 @@ class ResetPasswordBottomSheet extends StatefulWidget {
   final String email;
 
   ResetPasswordBottomSheet({
-    @required this.loginFunction,
-    @required this.email,
+    required this.loginFunction,
+    required this.email,
   });
 
   @override
@@ -306,7 +306,7 @@ class _ResetPasswordBottomSheetState extends State<ResetPasswordBottomSheet> {
       );
       return false;
     } else {
-      String message =
+      String? message =
           Utils.validatePassword(_passwordEditController.text.trim());
       if (message != null) {
         Utils.showAlertDialog(context, message);
@@ -321,7 +321,7 @@ class _ResetPasswordBottomSheetState extends State<ResetPasswordBottomSheet> {
       );
       return false;
     } else {
-      String message = Utils.validatePassword(
+      String? message = Utils.validatePassword(
           _confirmPasswordEditController.text.trim(),
           isConfirmPassword: true);
       if (message != null) {

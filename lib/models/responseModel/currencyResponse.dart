@@ -1,39 +1,39 @@
 class CurrencyResponse {
-  int status;
-  String message;
-  List<CurrencyData> data;
+  late int status;
+  late String message;
+  List<CurrencyData>? data;
 
-  CurrencyResponse({this.status, this.message, this.data});
+  CurrencyResponse({required this.status, required this.message, this.data});
 
   CurrencyResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<CurrencyData>();
+      data = <CurrencyData>[];
       json['data'].forEach((v) {
-        data.add(new CurrencyData.fromJson(v));
+        data!.add(CurrencyData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class CurrencyData {
-  int id;
-  String currency;
-  String code;
-  String symbol;
+  late int id;
+  late String currency;
+  late String code;
+  late String symbol;
 
-  CurrencyData({this.id, this.currency, this.code, this.symbol});
+  CurrencyData({required this.id, required this.currency, required this.code, required this.symbol});
 
   CurrencyData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -43,11 +43,11 @@ class CurrencyData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['currency'] = this.currency;
-    data['code'] = this.code;
-    data['symbol'] = this.symbol;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['currency'] = currency;
+    data['code'] = code;
+    data['symbol'] = symbol;
     return data;
   }
 }

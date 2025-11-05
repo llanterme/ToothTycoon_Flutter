@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:http/http.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
@@ -15,7 +15,6 @@ import 'package:tooth_tycoon/models/responseModel/loginResponseModel.dart';
 import 'package:tooth_tycoon/models/responseModel/signupResponseModel.dart';
 import 'package:tooth_tycoon/services/apiService.dart';
 import 'package:tooth_tycoon/services/navigation_service.dart';
-import 'package:tooth_tycoon/utils/encryptUtils.dart';
 import 'package:tooth_tycoon/utils/utils.dart';
 import 'package:tooth_tycoon/widgets/customWebView.dart';
 import 'dart:io' show Platform;
@@ -23,7 +22,7 @@ import 'dart:io' show Platform;
 class SignupBottomSheet extends StatefulWidget {
   final Function loginFunction;
 
-  SignupBottomSheet({@required this.loginFunction});
+  SignupBottomSheet({required this.loginFunction});
 
   @override
   _SignupBottomSheetState createState() => _SignupBottomSheetState();
@@ -43,9 +42,9 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
   FocusNode _emailFocusNode = FocusNode();
   FocusNode _passwordFocusNode = FocusNode();
 
-  UserCredential _faceBookUser;
+  UserCredential? _faceBookUser;
 
-  String _faceBookRedirectUrl = 'https://toothtycoon-41347.firebaseapp.com/__/auth/handler';
+  final String _faceBookRedirectUrl = 'https://toothtycoon-41347.firebaseapp.com/__/auth/handler';
   String faceBookClientId = '860546231360514';
 
   @override
@@ -400,7 +399,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
       );
       return false;
     } else {
-      String message = Utils.validateEmailId(_emailEditController.text.trim());
+      String? message = Utils.validateEmailId(_emailEditController.text.trim());
       if (message != null) {
         Utils.showAlertDialog(context, message);
         return false;
@@ -414,7 +413,7 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
       );
       return false;
     } else {
-      String message = Utils.validatePassword(_passwordEditController.text.trim());
+      String? message = Utils.validatePassword(_passwordEditController.text.trim());
       if (message != null) {
         Utils.showAlertDialog(context, message);
         return false;
@@ -425,64 +424,61 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
   }
 
   void _faceBookSignIn() async {
-    final facebookLogin = FacebookLogin();
+    try {
+      final LoginResult result = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile'],
+      );
 
-    FacebookLoginResult facebookLoginResult = await facebookLogin.logIn(['email']);
-    dynamic userProfile;
-    switch (facebookLoginResult.status) {
-      case FacebookLoginStatus.loggedIn:
-        FacebookAccessToken refreshedToken = await _apiService.getFacebookToken();
-        userProfile = await _apiService.getFacebookProfileDetails(refreshedToken);
-        _socialLogin(userProfile["name"], userProfile["email"], userProfile["id"], 'facebook');
-        _isFacebookLoading = false;
-        break;
-      case FacebookLoginStatus.cancelledByUser:
+      if (result.status == LoginStatus.success) {
+        final AccessToken? accessToken = result.accessToken;
+        if (accessToken != null) {
+          final userData = await FacebookAuth.instance.getUserData();
+          _socialLogin(userData['name'], userData['email'], userData['id'], 'facebook');
+          _isFacebookLoading = false;
+        }
+      } else if (result.status == LoginStatus.cancelled) {
         _isFacebookLoading = false;
         Utils.showAlertDialog(context, 'You cancelled the login request.');
-
-        break;
-      case FacebookLoginStatus.error:
+      } else {
         _isFacebookLoading = false;
         Utils.showAlertDialog(context, 'An error has occured. Please try again!');
-        break;
+      }
+    } catch (e) {
+      _isFacebookLoading = false;
+      Utils.showAlertDialog(context, 'An error has occured. Please try again!');
     }
   }
 
   void _appleSignIn() async {
-    if (await AppleSignIn.isAvailable()) {
-      try {
-        final AuthorizationResult result = await AppleSignIn.performRequests([
-          AppleIdRequest(requestedScopes: [
-            Scope.email,
-            Scope.fullName,
-          ])
-        ]);
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
 
-        switch (result.status) {
-          case AuthorizationStatus.authorized:
-            try {
-              final AppleIdCredential appleIdCredential = result.credential;
-              _socialLogin(
-                  appleIdCredential.fullName.givenName, appleIdCredential.email, "01", 'apple');
-            } catch (e) {
-              print("error");
-            }
-            break;
-          case AuthorizationStatus.error:
-            print("Sign in failed: ${result.error.localizedDescription}");
-            Utils.showToast(message: "Something went wrong!");
-            break;
-
-          case AuthorizationStatus.cancelled:
-            print('User cancelled');
-            Utils.showToast(message: "You cancelled te request.");
-            break;
+      if (credential.identityToken != null) {
+        try {
+          final String givenName = credential.givenName ?? 'User';
+          final String email = credential.email ?? '';
+          final String userId = credential.userIdentifier ?? '';
+          _socialLogin(givenName, email, userId, 'apple');
+        } catch (e) {
+          print("error");
         }
-      } catch (error) {
-        print(error);
       }
-    } else {
-      Utils.showToast(message: ('Apple SignIn is not available for your device'));
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) {
+        print('User cancelled');
+        Utils.showToast(message: "You cancelled te request.");
+      } else {
+        print("Sign in failed: ${e.message}");
+        Utils.showToast(message: "Something went wrong!");
+      }
+    } catch (error) {
+      print(error);
+      Utils.showToast(message: "Something went wrong!");
     }
   }
 
@@ -493,14 +489,12 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
 
     String email = _emailEditController.text.trim();
     String password = _passwordEditController.text.trim();
-    String encryptedEmail = await EncryptUtils.encryptText(email);
-    String encryptedPassword = await EncryptUtils.encryptText(password);
 
     SignupPostData signupPostData = SignupPostData();
-    signupPostData.email = encryptedEmail;
-    signupPostData.name = encryptedEmail;
-    signupPostData.password = encryptedPassword;
-    signupPostData.confirmPassword = encryptedPassword;
+    signupPostData.email = email;
+    signupPostData.name = email.split('@')[0]; // Use email username as name
+    signupPostData.password = password;
+    signupPostData.confirmPassword = password;
 
     Response response = await _apiService.signupApiCall(signupPostData);
     dynamic responseData = json.decode(response.body);
@@ -509,9 +503,9 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
     if (response.statusCode == Constants.VAL_RESPONSE_STATUS_USER_CREATED) {
       SignupResponse signupResponse = SignupResponse.fromJson(responseData);
 
-      await PreferenceHelper().setAccessToken(signupResponse.data.accessToken);
-      await PreferenceHelper().setUserId(signupResponse.data.id.toString());
-      await PreferenceHelper().setEmailId(signupResponse.data.email);
+      await PreferenceHelper().setAccessToken(signupResponse.data!.accessToken);
+      await PreferenceHelper().setUserId(signupResponse.data!.id.toString());
+      await PreferenceHelper().setEmailId(signupResponse.data!.email);
       await PreferenceHelper().setLoginResponse(response.body);
       await PreferenceHelper().setIsUserLogin(true);
 
@@ -555,9 +549,9 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
     if (response.statusCode == Constants.VAL_RESPONSE_STATUS_USER_CREATED) {
       LoginResponse loginResponse = LoginResponse.fromJson(responseData);
 
-      await PreferenceHelper().setAccessToken(loginResponse.data.accessToken);
-      await PreferenceHelper().setUserId(loginResponse.data.id.toString());
-      await PreferenceHelper().setEmailId(loginResponse.data.email);
+      await PreferenceHelper().setAccessToken(loginResponse.data!.accessToken);
+      await PreferenceHelper().setUserId(loginResponse.data!.id.toString());
+      await PreferenceHelper().setEmailId(loginResponse.data!.email);
       await PreferenceHelper().setLoginResponse(response.body);
       await PreferenceHelper().setIsUserLogin(true);
 

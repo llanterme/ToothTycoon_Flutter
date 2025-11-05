@@ -20,7 +20,7 @@ import 'package:tooth_tycoon/utils/utils.dart';
 class AddChildBottomSheet extends StatefulWidget {
   final Function refreshPage;
 
-  AddChildBottomSheet({this.refreshPage});
+  AddChildBottomSheet({required this.refreshPage});
 
   @override
   _AddChildBottomSheetState createState() => _AddChildBottomSheetState();
@@ -34,20 +34,20 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
 
   int amountCounter = 0;
 
-  File _selImageFile;
+  File? _selImageFile;
 
   DateTime selectedDate = DateTime.now();
 
   TextEditingController _nameEditController = TextEditingController();
 
-  PickedFile _imageFile;
+  XFile? _imageFile;
 
-  InterstitialAd _interstitialAd;
+  InterstitialAd? _interstitialAd;
   bool _isInterstitialAdReady = false;
 
   @override
   void dispose() {
-    _interstitialAd.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
   }
 
@@ -145,7 +145,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                 )
               : CircleAvatar(
                   radius: 60,
-                  backgroundImage: FileImage(_selImageFile),
+                  backgroundImage: FileImage(_selImageFile!),
                 ),
         ),
       ),
@@ -164,7 +164,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
         keyboardType: TextInputType.name,
         maxLength: 100,
         inputFormatters: [
-          new WhitelistingTextInputFormatter(RegExp("[a-zA-Z]")),
+          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
         ],
         style: TextStyle(color: AppColors.COLOR_TEXT_BLACK, fontFamily: 'Avenir', fontSize: 14),
         decoration: InputDecoration(
@@ -396,37 +396,38 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
 
   void _pickImageFromGallery() async {
     Navigator.pop(context);
-    _imageFile = await ImagePicker().getImage(source: ImageSource.gallery, imageQuality: 50);
+    _imageFile = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 50);
     setState(() {
       if (_imageFile != null) {
-        _selImageFile = File(_imageFile.path);
+        _selImageFile = File(_imageFile!.path);
       }
     });
   }
 
   void _pickImageFromCamera() async {
     Navigator.pop(context);
-    PickedFile _imageFile =
-        await ImagePicker().getImage(source: ImageSource.camera, imageQuality: 50);
+    XFile? _imageFile =
+        await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 50);
     setState(() {
       if (_imageFile != null) {
-        _selImageFile = File(_imageFile.path);
+        _selImageFile = File(_imageFile!.path);
       }
     });
   }
 
   _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate, // Refer step 1
       firstDate: DateTime(1970),
-      lastDate: DateTime(2025),
+      lastDate: DateTime.now(),
     );
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
         _isDateOfBirthSet = true;
       });
+    }
   }
 
   bool _validateForm() {
@@ -464,12 +465,12 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
       _isLoading = true;
     });
 
-    String token = await PreferenceHelper().getAccessToken();
+    String? token = await PreferenceHelper().getAccessToken();
     String authToken = 'Bearer $token';
 
     String name = _nameEditController.text.trim();
     String dateOfBirth = '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}';
-    String imagePath = _selImageFile.path;
+    String imagePath = _selImageFile!.path;
 
     AddChildPostData addChildPostData = AddChildPostData();
     addChildPostData.name = name;
