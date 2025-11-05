@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart'; // For kIsWeb and defaultTargetPlatform
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
@@ -33,7 +31,6 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
   bool _isLoading = false;
   bool _isFrontCamera = true;
   bool _isImageCapture = false;
-  bool _isSimulator = false;
 
   String? imagePath;
 
@@ -44,35 +41,11 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
   @override
   void initState() {
     super.initState();
-    _checkSimulator();
     _initCamera();
-  }
-
-  // Check if running on simulator
-  Future<void> _checkSimulator() async {
-    if (Platform.isIOS) {
-      // iOS Simulator detection
-      _isSimulator = !Platform.environment.containsKey('SIMULATOR_DEVICE_NAME')
-          ? defaultTargetPlatform == TargetPlatform.iOS
-          : true;
-    } else if (Platform.isAndroid) {
-      // Android Emulator detection - check for common emulator properties
-      _isSimulator = await _isAndroidEmulator();
-    }
-    setState(() {});
-    print('Running on simulator: $_isSimulator');
-  }
-
-  Future<bool> _isAndroidEmulator() async {
-    // Android emulators typically have these characteristics
-    return Platform.environment['ANDROID_EMULATOR'] == 'true' ||
-           await availableCameras().then((cameras) => cameras.isEmpty);
   }
 
   @override
   Widget build(BuildContext context) {
-    double ratio = 16 / 9;
-
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -120,30 +93,12 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
           bottom: 0,
           child: Container(
             height: MediaQuery.of(context).size.width * (16 / 9),
-            child: _isSimulator
-                ? Container(
-                    color: Colors.grey[300],
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.camera_alt, size: 100, color: Colors.grey[600]),
-                          SizedBox(height: 20),
-                          Text(
-                            'Simulator Mode\nCamera Preview',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                          ),
-                        ],
-                      ),
-                    ),
+            child: controller != null && controller!.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: controller!.value.aspectRatio,
+                    child: CameraPreview(controller!),
                   )
-                : (controller != null && controller!.value.isInitialized
-                    ? AspectRatio(
-                        aspectRatio: controller!.value.aspectRatio,
-                        child: CameraPreview(controller!),
-                      )
-                    : Center(child: CircularProgressIndicator())),
+                : Center(child: CircularProgressIndicator()),
           ),
         ),
         Positioned(
@@ -244,19 +199,10 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
   void _initCamera() async {
     WidgetsBinding.instance.addObserver(this);
 
-    // Skip camera initialization on simulator
-    if (_isSimulator) {
-      print('Simulator detected - skipping camera initialization');
-      return;
-    }
-
     availableCameras().then((value) {
       cameras = value;
       if (cameras.isEmpty) {
         print('No cameras available');
-        setState(() {
-          _isSimulator = true;
-        });
         return;
       }
       controller = CameraController(cameras[1], ResolutionPreset.medium,
@@ -314,12 +260,6 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
   }
 
   Future<String?> _takePicture() async {
-    // If running on simulator, use a dummy image
-    if (_isSimulator) {
-      print('Simulator mode - using dummy image');
-      return await _createDummyImage();
-    }
-
     if (controller == null || !controller!.value.isInitialized) {
       //showInSnackBar('Error: select a camera first.');
       //showToast('Error: select a camera first.');
@@ -345,26 +285,6 @@ class _CaptureImageScreenState extends State<CaptureImageScreen>
     return filePath;
   }
 
-  // Create a dummy image file for simulator testing
-  Future<String?> _createDummyImage() async {
-    try {
-      final Directory extDir = await getApplicationDocumentsDirectory();
-      final String dirPath = '${extDir.path}/Pictures/flutter_test';
-      await Directory(dirPath).create(recursive: true);
-      final String filePath = '$dirPath/dummy_${timestamp()}.txt';
-
-      // Create a simple text file as placeholder
-      // In production, you could copy an actual image from assets
-      final File dummyFile = File(filePath);
-      await dummyFile.writeAsString('Dummy tooth image - Simulator Mode\nTimestamp: ${timestamp()}');
-
-      print('Created dummy image at: $filePath');
-      return filePath;
-    } catch (e) {
-      print('Error creating dummy image: $e');
-      return null;
-    }
-  }
 
   void _setFromCamera() {
     setState(() {

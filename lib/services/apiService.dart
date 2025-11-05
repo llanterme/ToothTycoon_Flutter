@@ -10,8 +10,9 @@ import 'package:tooth_tycoon/models/postdataModel/signupPostDataModel.dart';
 import 'package:tooth_tycoon/models/postdataModel/socialLoginPostData.dart';
 
 class APIService {
-  final String baseUrl = 'http://127.0.0.1:8080/api'; // Live
-  // final String baseUrl = 'http://ec2-3-141-107-40.us-east-2.compute.amazonaws.com/api'; // Luke
+  // final String baseUrl = 'http://127.0.0.1:8080/api'; // Live
+  final String baseUrl =
+      'https://toothtycoon-production.up.railway.app/api'; // Luke
   Map<String, dynamic> header = {'Accept': "application/json"};
 
   dynamic getFacebookProfileDetails(AccessToken token) async {
@@ -19,7 +20,8 @@ class APIService {
 
     try {
       final graphResponse = await http.get(
-        Uri.parse('https://graph.facebook.com/v2.12/me?fields=email,name,picture.width(800).height(800)&access_token=${token.token}'),
+        Uri.parse(
+            'https://graph.facebook.com/v2.12/me?fields=email,name,picture.width(800).height(800)&access_token=${token.token}'),
       );
       userProfile = JSON.jsonDecode(graphResponse.body);
 
