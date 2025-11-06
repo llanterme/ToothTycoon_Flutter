@@ -3,12 +3,10 @@ import 'dart:convert';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart';
 import 'package:tooth_tycoon/bottomsheet/addChildBottomSheet.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
-import 'package:tooth_tycoon/helper/add_helper.dart';
 import 'package:tooth_tycoon/helper/prefrenceHelper.dart';
 import 'package:tooth_tycoon/models/responseModel/childListResponse.dart';
 import 'package:tooth_tycoon/services/apiService.dart';
@@ -28,45 +26,10 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
 
   List<ChildData>? _childList;
 
-  InterstitialAd? _interstitialAd;
-  bool _isInterstitialAdReady = false;
-
   @override
   void initState() {
-    _loadInterstitialAd();
     _getChildList();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _interstitialAd?.dispose();
-    super.dispose();
-  }
-
-  void _loadInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: AdHelper.interstitialAdUnitId,
-      request: const AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) {
-          this._interstitialAd = ad;
-
-          ad.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (ad) {
-              NavigationService.instance
-                  .navigateToReplacementNamed(Constants.KEY_ROUTE_CONGRATULATIONS_ON_TOOTH_PULL);
-            },
-          );
-
-          _isInterstitialAdReady = true;
-        },
-        onAdFailedToLoad: (err) {
-          print('Failed to load an interstitial ad: ${err.message}');
-          _isInterstitialAdReady = false;
-        },
-      ),
-    );
   }
 
   @override
@@ -404,10 +367,6 @@ class _ViewChildScreenState extends State<ViewChildScreen> {
         contentColor: AppColors.COLOR_PRIMARY,
         duration: Duration(seconds: 3),
       );
-
-      if (_isInterstitialAdReady) {
-        _interstitialAd?.show();
-      }
     }
   }
 }

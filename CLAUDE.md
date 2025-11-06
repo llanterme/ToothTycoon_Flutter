@@ -3,10 +3,12 @@
 ## Project Overview
 Tooth Tycoon is a Flutter mobile application designed to help parents track their children's tooth loss milestones and teach financial literacy through a gamified experience. The app allows parents to document each lost tooth, reward their children with virtual currency, and provide educational features around investing and savings.
 
-**Version:** 1.0.1+8
-**SDK:** Dart 2.7.0 - 3.0.0
+**Version:** 1.0.0+1
+**SDK:** Dart >=3.0.0 <4.0.0 (upgraded from 2.7.0)
 **Platform:** iOS & Android
 **Backend:** AWS EC2 (http://ec2-3-141-107-40.us-east-2.compute.amazonaws.com/api)
+**Package Name (Android):** za.co.digitalcowboy.toothtycoon
+**Bundle ID (iOS):** za.co.digitalcowboy.toothtycoon
 
 ## Core Features
 
@@ -97,8 +99,7 @@ lib/
 │   ├── apiService.dart         # All API calls
 │   └── navigation_service.dart # Navigation management
 ├── helper/
-│   ├── prefrenceHelper.dart    # SharedPreferences wrapper
-│   └── add_helper.dart         # Additional helpers
+│   └── prefrenceHelper.dart    # SharedPreferences wrapper
 ├── utils/
 │   ├── utils.dart              # General utilities
 │   ├── commonResponse.dart     # API response parsing
@@ -215,49 +216,53 @@ Five tooth types are defined in [constants.dart](lib/constants/constants.dart:51
 
 ### UI & UX
 - `flutter` - Core framework
-- `cupertino_icons: ^0.1.3` - iOS-style icons
-- `bot_toast: 3.0.4` - Toast notifications
-- `page_view_indicators: 1.3.1` - Page indicators
-- `percent_indicator: 2.1.7+4` - Progress indicators
-- `auto_size_text: 2.1.0` - Responsive text sizing
-- `draggable_scrollbar: ^0.0.4` - Custom scrollbars
+- `cupertino_icons: ^1.0.8` - iOS-style icons (upgraded)
+- `bot_toast: ^4.1.3` - Toast notifications (upgraded)
+- `page_view_indicators: ^2.0.0` - Page indicators (upgraded)
+- `percent_indicator: ^4.2.3` - Progress indicators (upgraded)
+- `auto_size_text: ^3.0.0` - Responsive text sizing (upgraded)
+- `draggable_scrollbar: ^0.1.0` - Custom scrollbars (upgraded)
 
 ### Media & Animation
-- `video_player: 1.0.1` - Video playback
-- `camera: 0.5.8+7` - Camera integration
-- `image_picker: 0.6.7+11` - Photo selection
-- `image_sequence_animator: ^1.0.10` - Frame-by-frame animations
-- `esys_flutter_share: ^1.0.2` - Social sharing
+- `video_player: ^2.9.2` - Video playback (upgraded)
+- `camera: ^0.11.0+2` - Camera integration (upgraded)
+- `image_picker: ^1.1.2` - Photo selection (upgraded)
+- `image_sequence_animator: ^2.0.0` - Frame-by-frame animations (upgraded)
+- `share_plus: ^10.1.3` - Social sharing (migrated from esys_flutter_share)
 
 ### Backend & Storage
-- `http: 0.12.2` - HTTP client
-- `http_parser: 3.1.3` - HTTP parsing utilities
-- `shared_preferences: 0.5.12+4` - Local storage
-- `path_provider: 1.6.21` - File system access
-- `device_info: 0.4.2+4` - Device information
+- `http: ^1.2.2` - HTTP client (upgraded)
+- `http_parser: ^4.0.2` - HTTP parsing utilities (upgraded)
+- `shared_preferences: ^2.3.5` - Local storage (upgraded)
+- `path_provider: ^2.1.5` - File system access (upgraded)
+- `device_info_plus: ^11.2.0` - Device information (migrated from device_info)
 
 ### Authentication
-- `firebase_auth: 0.20.1` - Firebase authentication
-- `firebase_core: 0.7.0` - Firebase core
-- `apple_sign_in: 0.1.0` - Apple Sign In
-- `flutter_facebook_login: ^3.0.0` - Facebook login
+- `firebase_auth: ^5.3.4` - Firebase authentication (upgraded)
+- `firebase_core: ^3.10.0` - Firebase core (upgraded)
+- `sign_in_with_apple: ^6.1.3` - Apple Sign In (migrated from apple_sign_in)
+- `flutter_facebook_auth: ^6.0.4` - Facebook login (migrated from flutter_facebook_login)
 
 ### Utilities
-- `intl: 0.16.1` - Internationalization
-- `encrypt: 4.0.3` - Encryption utilities
-- `synchronized: 2.1.0+1` - Synchronization primitives
-- `webview_flutter: 0.3.23` - WebView component
+- `intl: ^0.19.0` - Internationalization (upgraded)
+- `encrypt: ^5.0.3` - Encryption utilities (upgraded)
+- `synchronized: ^3.3.0+3` - Synchronization primitives (upgraded)
+- `webview_flutter: ^4.10.0` - WebView component (upgraded)
 
 ### Monetization
-- `google_mobile_ads: ^0.13.1` - Google AdMob integration (initialized in [main.dart](lib/main.dart:31-38))
+- **REMOVED**: Google AdMob has been completely removed from the project
 
-## App Initialization ([main.dart](lib/main.dart))
+## App Initialization
 
+### Flutter App ([main.dart](lib/main.dart))
 1. **Widgets Binding** - Ensures Flutter is initialized
-2. **AdMob Initialization** - Sets up mobile ads with child-directed treatment configuration
-3. **System UI** - Sets portrait orientation and light status bar
-4. **BotToast** - Initializes toast notification system
-5. **Navigation Service** - Sets up global navigation key
+2. **System UI** - Sets portrait orientation and light status bar
+3. **BotToast** - Initializes toast notification system
+4. **Navigation Service** - Sets up global navigation key
+
+### Android App ([android/app/src/main/kotlin/za/co/digitalcowboy/toothtycoon/MyApplication.kt](android/app/src/main/kotlin/za/co/digitalcowboy/toothtycoon/MyApplication.kt))
+1. **Facebook SDK Initialization** - `FacebookSdk.sdkInitialize(applicationContext)`
+2. **Facebook App Events** - `AppEventsLogger.activateApp(this)`
 
 ## Color Scheme ([constants/colors.dart](lib/constants/colors.dart))
 - Primary color: Custom purple/blue theme
@@ -315,39 +320,175 @@ All authenticated endpoints require a Bearer token in the Authorization header. 
 ### Encryption
 - [encryptUtils.dart](lib/utils/encryptUtils.dart) provides encryption functionality using the `encrypt` package (v4.0.3)
 
+## Recent Major Updates (November 2024)
+
+### Package Name Migration
+- **Android Package**: Changed from `orainfotech.mobi.tooth_tycoon` to `za.co.digitalcowboy.toothtycoon`
+- **iOS Bundle ID**: Changed to `za.co.digitalcowboy.toothtycoon`
+- All configuration files updated (AndroidManifest.xml, google-services.json, Info.plist, etc.)
+- MainActivity moved to new package structure
+
+### Android Build System Upgrades
+- **Gradle**: Upgraded from 6.4.1 to 8.9
+- **Android Gradle Plugin**: Upgraded from 4.0.1 to 8.7.3
+- **Kotlin**: Upgraded from 1.3.50 to 1.9.10
+- **Google Services**: Upgraded from 3.0.0 to 4.4.0
+- **Build Configuration**:
+  - compileSdk: 35
+  - targetSdk: 35
+  - minSdk: 23 (required by Firebase Auth)
+  - Java/Kotlin compatibility: Version 17
+- Migrated to declarative plugin syntax in settings.gradle
+- Replaced jcenter() with mavenCentral()
+- Removed deprecated Android v1 embedding
+
+### Google Ads Removal
+- Completely removed all Google AdMob implementation
+- Deleted `add_helper.dart` file
+- Removed all InterstitialAd and BannerAd code from:
+  - addChildBottomSheet.dart
+  - setBudgetBottomSheet.dart
+  - analysingScreen.dart
+  - viewChildren.dart
+  - welcomeScreen.dart
+- Removed AdMob metadata from AndroidManifest.xml and Info.plist
+
+### Camera Functionality Fix
+- Removed all simulator/emulator detection code from captureImageScreen.dart
+- Removed `_isSimulator` flag and related methods
+- Camera now works on all physical devices
+
+### Facebook Authentication Configuration
+- **Android**:
+  - App ID: 1159577366145971
+  - Client Token: 53d347f96a14aef9b0353d3a79d0d6f5
+  - Created MyApplication.kt to initialize Facebook SDK
+  - Added Facebook SDK dependency: `com.facebook.android:facebook-login:16.0.0`
+  - Configured FacebookActivity and CustomTabActivity in AndroidManifest.xml
+  - strings.xml properly configured with facebook_app_id and fb_login_protocol_scheme
+
+- **iOS**:
+  - App ID: 1159577366145971
+  - Client Token: 53d347f96a14aef9b0353d3a79d0d6f5
+  - CFBundleURLSchemes: fb1159577366145971
+  - Info.plist properly configured
+
+### Release Signing Configuration
+- Created release keystore: `tooth-tycoon-release-key.jks`
+- Key alias: `toothtycoon`
+- Keystore passwords configured in `key.properties`
+- Certificate valid for 10,000 days
+- **Release Key Hash (for Facebook)**: `MOmYX15FUQjiG/lThsrXqjc9+xA=`
+- build.gradle configured for release signing with minifyEnabled
+
+### App Bundle Created
+- Successfully built release AAB: `app-release.aab` (71 MB)
+- Properly signed with release certificate
+- Ready for Google Play Internal Testing upload
+
 ## Known Issues & Technical Debt
 
-1. **Outdated Dependencies** - Many packages are using old versions (Flutter SDK 2.7.0, deprecated packages)
-2. **Null Safety** - Project uses pre-null-safety Dart version
-3. **Hard-coded URLs** - Base URL is hard-coded in [apiService.dart](lib/services/apiService.dart:14)
-4. **No Error Recovery** - Limited error handling and user feedback
-5. **Mixed Auth Methods** - Multiple authentication providers without unified flow
+1. **Hard-coded URLs** - Base URL is hard-coded in [apiService.dart](lib/services/apiService.dart:14)
+2. **No Error Recovery** - Limited error handling and user feedback
+3. **Apple Sign In Bug** - Login flow in loginBottomSheet.dart bypasses backend authentication (navigates directly to home)
+4. **Symbol Stripping Warning** - Release builds show warning about native library debug symbol stripping (doesn't prevent build)
 
 ## Future Considerations
 
-1. **Migration to Null Safety** - Update to Dart 3.x with null safety
-2. **Dependency Updates** - Many packages need updating
-3. **State Management** - Consider Provider, Riverpod, or Bloc for better state management
-4. **API Configuration** - Move base URLs to environment variables
-5. **Testing** - Add unit tests and widget tests
-6. **Accessibility** - Improve screen reader support and accessibility features
-7. **Localization** - Support multiple languages using the intl package more extensively
-8. **Analytics** - Add comprehensive analytics tracking
-9. **Offline Support** - Cache data for offline access
+1. **State Management** - Consider Provider, Riverpod, or Bloc for better state management
+2. **API Configuration** - Move base URLs to environment variables
+3. **Testing** - Add unit tests and widget tests
+4. **Accessibility** - Improve screen reader support and accessibility features
+5. **Localization** - Support multiple languages using the intl package more extensively
+6. **Analytics** - Add comprehensive analytics tracking (Firebase Analytics recommended)
+7. **Offline Support** - Cache data for offline access
+8. **Fix Apple Sign In** - Login flow should call backend API instead of navigating directly
+
+## Important Configuration Files
+
+### Android
+- **Package Name**: za.co.digitalcowboy.toothtycoon
+- **Main Activity**: [android/app/src/main/kotlin/za/co/digitalcowboy/toothtycoon/MainActivity.kt](android/app/src/main/kotlin/za/co/digitalcowboy/toothtycoon/MainActivity.kt)
+- **Application Class**: [android/app/src/main/kotlin/za/co/digitalcowboy/toothtycoon/MyApplication.kt](android/app/src/main/kotlin/za/co/digitalcowboy/toothtycoon/MyApplication.kt)
+- **Manifest**: [android/app/src/main/AndroidManifest.xml](android/app/src/main/AndroidManifest.xml)
+- **Gradle Config**: [android/app/build.gradle](android/app/build.gradle)
+- **Google Services**: [android/app/google-services.json](android/app/google-services.json)
+- **Strings**: [android/app/src/main/res/values/strings.xml](android/app/src/main/res/values/strings.xml)
+- **Keystore**: android/tooth-tycoon-release-key.jks (not in git)
+- **Key Properties**: android/key.properties (not in git)
+
+### iOS
+- **Bundle ID**: za.co.digitalcowboy.toothtycoon
+- **Info.plist**: [ios/Runner/Info.plist](ios/Runner/Info.plist)
+- **Xcode Project**: [ios/Runner.xcodeproj/project.pbxproj](ios/Runner.xcodeproj/project.pbxproj)
+- **Google Services**: [ios/GoogleService-Info.plist](ios/GoogleService-Info.plist)
+
+### Firebase Setup
+- Firebase is used **only** for Facebook Login authentication
+- Not used for: Database, Storage, Push Notifications, Analytics
+- Required files:
+  - Android: google-services.json
+  - iOS: GoogleService-Info.plist
+
+### Facebook Developer Console Setup
+- **App ID**: 1159577366145971
+- **Android Package Name**: za.co.digitalcowboy.toothtycoon
+- **Android Class Name**: za.co.digitalcowboy.toothtycoon.MainActivity
+- **Android Key Hashes**:
+  - Debug: `6Brw87eQ9X11F8uLPwCPpoLQFhc=`
+  - Release: `MOmYX15FUQjiG/lThsrXqjc9+xA=`
+- **iOS Bundle ID**: za.co.digitalcowboy.toothtycoon
 
 ## Git Status
-- Current branch: `master`
+- Current branch: `feature_android`
 - Main branch: `master`
-- Latest commit: "changes" (b6c083a)
-- Recent work focused on bug fixes
+- Recent work: Android build fixes, Facebook authentication setup, release signing, AAB generation
 
 ## Getting Started for Development
 
-1. Ensure Flutter SDK 2.7.0+ is installed
+### Prerequisites
+1. Flutter SDK 3.x+ installed
+2. Dart SDK 3.0.0+
+3. Android Studio with SDK 35
+4. Xcode (for iOS development)
+5. Java 17+ (for Android builds)
+
+### Setup Steps
+1. Clone the repository
 2. Run `flutter pub get` to install dependencies
-3. Configure Firebase project (google-services.json for Android, GoogleService-Info.plist for iOS)
-4. Configure Facebook App ID for social login
-5. Run on device/emulator: `flutter run`
+3. Ensure Firebase configuration files are in place:
+   - `android/app/google-services.json`
+   - `ios/GoogleService-Info.plist`
+4. For Android development:
+   - Ensure SDK 35 is installed
+   - Gradle 8.9 will be downloaded automatically
+5. For iOS development:
+   - Run `pod install` in ios/ directory
+6. Run on device/emulator: `flutter run`
+
+### Building for Release
+
+#### Android APK (for testing)
+```bash
+flutter build apk --release
+```
+
+#### Android App Bundle (for Play Store)
+```bash
+flutter build appbundle --release
+```
+Output: `build/app/outputs/bundle/release/app-release.aab`
+
+#### iOS (requires Mac)
+```bash
+flutter build ios --release
+```
+
+### Signing Keys
+- **IMPORTANT**: Never commit `key.properties` or `.jks` files to git
+- Backup keystore file securely
+- Keystore password: (stored in key.properties)
+- If keystore is lost, you cannot update the app on Play Store
 
 ## Contact & API Access
 The backend API is hosted on AWS EC2. For API access, authentication tokens, or database schema information, contact the backend team.

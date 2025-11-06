@@ -25,18 +25,18 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb860546231360514</string>
+				<string>fb1159577366145971</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>
-	<string>860546231360514</string>
+	<string>1159577366145971</string>
+	<key>FacebookClientToken</key>
+	<string>53d347f96a14aef9b0353d3a79d0d6f5</string>
 	<key>FacebookDisplayName</key>
 	<string>tooth_tycoon</string>
-	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-4997882241408011~3429066122</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -70,13 +70,6 @@
 	<string>This App wants to access your photo library for saving picture, Click 'allow' to give permission.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This App wants to access your photo library for changing profile picture, Click 'allow' to give permission.</string>
-	<key>SKAdNetworkItems</key>
-	<array>
-		<dict>
-			<key>SKAdNetworkIdentifier</key>
-			<string>cstr6suwn9.skadnetwork</string>
-		</dict>
-	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

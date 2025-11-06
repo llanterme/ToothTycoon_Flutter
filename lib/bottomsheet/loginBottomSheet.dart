@@ -703,7 +703,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
     dynamic responseData = json.decode(response.body);
     String message = responseData[Constants.KEY_MESSAGE];
 
-    if (response.statusCode == Constants.VAL_RESPONSE_STATUS_USER_CREATED) {
+    if (response.statusCode == Constants.VAL_RESPONSE_STATUS_OK) {
       LoginResponse loginResponse = LoginResponse.fromJson(responseData);
 
       await PreferenceHelper().setAccessToken(loginResponse.data!.accessToken);
