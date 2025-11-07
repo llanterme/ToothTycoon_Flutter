@@ -4,17 +4,13 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
-import 'package:tooth_tycoon/helper/add_helper.dart';
 import 'package:tooth_tycoon/helper/prefrenceHelper.dart';
 import 'package:tooth_tycoon/models/postdataModel/addChildPostDataModel.dart';
-import 'package:tooth_tycoon/models/responseModel/currencyResponse.dart';
 import 'package:tooth_tycoon/services/apiService.dart';
-import 'package:tooth_tycoon/utils/commonResponse.dart';
 import 'package:tooth_tycoon/utils/utils.dart';
 
 class AddChildBottomSheet extends StatefulWidget {
@@ -41,43 +37,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
   TextEditingController _nameEditController = TextEditingController();
 
   XFile? _imageFile;
-
-  InterstitialAd? _interstitialAd;
-  bool _isInterstitialAdReady = false;
-
-  @override
-  void dispose() {
-    _interstitialAd?.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    _loadInterstitialAd();
-    super.initState();
-  }
-
-  void _loadInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: AdHelper.interstitialAdUnitId,
-      request: AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) {
-          this._interstitialAd = ad;
-
-          ad.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (ad) {},
-          );
-
-          _isInterstitialAdReady = true;
-        },
-        onAdFailedToLoad: (err) {
-          print('Failed to load an interstitial ad: ${err.message}');
-          _isInterstitialAdReady = false;
-        },
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -458,9 +417,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
   }
 
   void _submit() async {
-    if (_isInterstitialAdReady) {
-      _interstitialAd?.show();
-    }
     setState(() {
       _isLoading = true;
     });

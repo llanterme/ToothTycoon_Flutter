@@ -1,4 +1,4 @@
-package orainfotech.mobi.tooth_tycoon
+package za.co.digitalcowboy.toothtycoon
 
 import io.flutter.embedding.android.FlutterActivity
 

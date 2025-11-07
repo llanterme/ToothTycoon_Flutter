@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:tooth_tycoon/bottomsheet/loginBottomSheet.dart';
 import 'package:tooth_tycoon/bottomsheet/resetPasswordBottomSheet.dart';
 import 'package:tooth_tycoon/bottomsheet/signupBottomSheet.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
-import 'package:tooth_tycoon/helper/add_helper.dart';
 
 import 'package:tooth_tycoon/widgets/videoPlayerWidget.dart';
 
@@ -23,61 +21,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   final double ratio = 832 / 726;
 
-  BannerAd? _anchoredBanner;
-  bool _loadingAnchoredBanner = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _anchoredBanner?.dispose();
-    super.dispose();
-  }
-
-  Future<void> _createAnchoredBanner(BuildContext context) async {
-    final AnchoredAdaptiveBannerAdSize? size = await AdSize.getAnchoredAdaptiveBannerAdSize(
-      Orientation.landscape,
-      MediaQuery.of(context).size.width.truncate(),
-    );
-
-    if (size == null) {
-      print('Unable to get height of anchored banner.');
-      return;
-    }
-
-    final BannerAd banner = BannerAd(
-      size: size,
-      request: const AdRequest(),
-      adUnitId: AdHelper.bannerAdUnitId,
-      listener: BannerAdListener(
-        onAdLoaded: (Ad ad) {
-          print('$BannerAd loaded.');
-          if (mounted) {
-            setState(() {
-              _anchoredBanner = ad as BannerAd;
-            });
-          }
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$BannerAd failedToLoad: $error');
-          ad.dispose();
-        },
-        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
-      ),
-    );
-    return banner.load();
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (!_loadingAnchoredBanner) {
-      _loadingAnchoredBanner = true;
-      _createAnchoredBanner(context);
-    }
     return Scaffold(
         backgroundColor: AppColors.COLOR_PRIMARY,
         body: SafeArea(
@@ -92,19 +37,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 _pageIndicator(),
                 _signupBtn(),
                 _loginBtn(),
-                const SizedBox(height: 20),
-                if (_anchoredBanner != null)
-                  Builder(
-                    builder: (context) {
-                      final banner = _anchoredBanner!;
-                      return Container(
-                        color: Colors.green,
-                        width: banner.size.width.toDouble(),
-                        height: banner.size.height.toDouble(),
-                        child: AdWidget(ad: banner),
-                      );
-                    },
-                  ),
               ],
             ),
           ),

@@ -2,24 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>776641521804-lqjomumpoto59ijbdlch0ca68llr4dcr.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.776641521804-lqjomumpoto59ijbdlch0ca68llr4dcr</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>776641521804-730jro1poubjrpvcvbhtno53lmlpmvon.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDBP6-4wMUFf4pHGtLHdPF3WQ3K1hRQiFk</string>
+	<string>AIzaSyD2gMeS7N17l7Z8JcUv67gNR8PS-xUs-XE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>776641521804</string>
+	<string>87157512673</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>orainfotech.mobi.toothtycoon</string>
+	<string>za.co.digitalcowboy.toothtycoon</string>
 	<key>PROJECT_ID</key>
-	<string>toothtycoon-41347</string>
+	<string>tooth-tycoon</string>
 	<key>STORAGE_BUCKET</key>
-	<string>toothtycoon-41347.appspot.com</string>
+	<string>tooth-tycoon.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,10 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:776641521804:ios:bfab8816f86204e455f3a9</string>
-	<key>DATABASE_URL</key>
-	<string>https://toothtycoon-41347.firebaseio.com</string>
-	<key>ADMOB_APP_ID</key>
-	<string>ca-app-pub-4997882241408011~3429066122</string>
+	<string>1:87157512673:ios:5a8cae50220149e9addaa0</string>
 </dict>
 </plist>

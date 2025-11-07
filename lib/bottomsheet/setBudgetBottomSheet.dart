@@ -2,11 +2,9 @@ import 'dart:convert';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart';
 import 'package:tooth_tycoon/constants/colors.dart';
 import 'package:tooth_tycoon/constants/constants.dart';
-import 'package:tooth_tycoon/helper/add_helper.dart';
 import 'package:tooth_tycoon/helper/prefrenceHelper.dart';
 import 'package:tooth_tycoon/models/responseModel/currencyResponse.dart';
 import 'package:tooth_tycoon/models/responseModel/loginResponseModel.dart';
@@ -31,40 +29,8 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
 
   String _selCurrency = '';
 
-  InterstitialAd? _interstitialAd;
-  bool _isInterstitialAdReady = false;
-
-  void _loadInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: AdHelper.interstitialAdUnitId,
-      request: AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) {
-          this._interstitialAd = ad;
-
-          ad.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (ad) {},
-          );
-
-          _isInterstitialAdReady = true;
-        },
-        onAdFailedToLoad: (err) {
-          print('Failed to load an interstitial ad: ${err.message}');
-          _isInterstitialAdReady = false;
-        },
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _interstitialAd?.dispose();
-    super.dispose();
-  }
-
   @override
   void initState() {
-    _loadInterstitialAd();
     _currencyList = CommonResponse.currencyResponse?.data ?? [];
     setState(() {
       if (_currencyList.isNotEmpty) {
@@ -368,9 +334,6 @@ class _SetBudgetBottomSheetState extends State<SetBudgetBottomSheet> {
       return;
     }
 
-    if (_isInterstitialAdReady) {
-      _interstitialAd?.show();
-    }
     setState(() {
       _isLoading = true;
     });
