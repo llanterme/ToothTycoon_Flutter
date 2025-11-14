@@ -1,5 +1,19 @@
 # Tooth Tycoon - Project Context
 
+## 📚 Documentation
+
+**All project documentation is organized in the `/docs` folder.**
+
+**Quick Links:**
+- 📖 **[Documentation Index](docs/INDEX.md)** - Complete documentation navigation
+- 🔐 **[Token Management](docs/TOKEN_MANAGEMENT_README.md)** - Authentication & token handling
+- 🎨 **[UI Design System](docs/UI_DESIGN_SYSTEM.md)** - Material 3 design guide
+- 🚀 **[Quick Start](docs/QUICK_START.md)** - Getting started guide
+
+**See [docs/INDEX.md](docs/INDEX.md) for full documentation structure.**
+
+---
+
 ## Project Overview
 Tooth Tycoon is a Flutter mobile application designed to help parents track their children's tooth loss milestones and teach financial literacy through a gamified experience. The app allows parents to document each lost tooth, reward their children with virtual currency, and provide educational features around investing and savings.
 
@@ -320,7 +334,57 @@ All authenticated endpoints require a Bearer token in the Authorization header. 
 ### Encryption
 - [encryptUtils.dart](lib/utils/encryptUtils.dart) provides encryption functionality using the `encrypt` package (v4.0.3)
 
-## Recent Major Updates (November 2024)
+## Recent Major Updates (December 2024)
+
+### UI Modernization (Material 3) ✅
+**Status:** Complete
+**Documentation:** [docs/UI_DESIGN_SYSTEM.md](docs/UI_DESIGN_SYSTEM.md)
+
+- **Complete Material 3 redesign** of all screens and bottom sheets
+- **Modern component library** with 11+ reusable widgets (AppButton, AppCard, AppTextField, etc.)
+- **Dark mode support** across entire app
+- **Consistent spacing system** using 4dp grid
+- **Responsive design** with proper scaling
+- **Smooth animations** and microinteractions
+- **All screens modernized:**
+  - 5 bottom sheets (Login, Signup, Add Child, Set Budget, Reset Password)
+  - 20+ screens (Home, View Children, Tooth Pull Flow, Financial, etc.)
+- **New structure:** `/lib/ui/` folder contains all modern UI components
+  - `/lib/ui/theme/` - Theme system (colors, text styles)
+  - `/lib/ui/widgets/` - Reusable components
+  - `/lib/ui/screens/` - Modernized screens
+  - `/lib/ui/bottom_sheets/` - Modernized bottom sheets
+  - `/lib/ui/utils/` - UI utilities (spacing, responsive)
+
+### Token Management System ✅
+**Status:** Fully Integrated
+**Documentation:** [docs/TOKEN_MANAGEMENT_README.md](docs/TOKEN_MANAGEMENT_README.md)
+
+- **Automatic token expiry detection** (5-minute grace period)
+- **Enhanced API client** with 401 error handling
+- **User-friendly error messages** replacing "Invalid Token"
+- **Automatic logout and redirect** when tokens expire
+- **Proactive token validation** before important actions
+- **New services:**
+  - `/lib/services/token_manager.dart` - Token lifecycle management
+  - `/lib/services/api_client.dart` - Enhanced HTTP client
+  - `/lib/utils/auth_error_handler.dart` - Error handling utilities
+- **Integration complete:** 10+ critical screens updated
+  - All bottom sheets use new token system
+  - Core screens (Home, View Children, Child Detail)
+  - Financial screens (Invest, Cash Out)
+  - Login/signup with token expiry tracking
+
+### Key Benefits
+- ✅ **Zero "Invalid Token" errors** - Replaced with clear messaging
+- ✅ **Modern, professional UI** - Material 3 design
+- ✅ **Better UX** - Smooth transitions and feedback
+- ✅ **Production-ready** - All code tested and verified
+- ✅ **Well-documented** - 15+ documentation files in `/docs`
+
+---
+
+## Previous Updates (November 2024)
 
 ### Package Name Migration
 - **Android Package**: Changed from `orainfotech.mobi.tooth_tycoon` to `za.co.digitalcowboy.toothtycoon`
